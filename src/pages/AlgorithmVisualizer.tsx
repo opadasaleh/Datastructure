@@ -6,7 +6,6 @@ import {
   Code, FileText, ChevronRight, ChevronDown,
   ChevronLeft
 } from 'lucide-react';
-import SortingVisualizer from '../components/visualizations/SortingVisualizer';
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer';
 import LinkedListVisualizer from '../components/visualizations/LinkedListVisualizer';
 
@@ -126,47 +125,6 @@ const ALGORITHMS = {
       {
         title: 'Complete Update',
         description: 'The element has been updated successfully.'
-      }
-    ]
-  },
-  'bubble-sort': {
-    title: 'Bubble Sort',
-    description: 'A simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.',
-    timeComplexity: 'O(n²)',
-    spaceComplexity: 'O(1)',
-    type: 'sorting',
-    code: `function bubbleSort(array) {
-  for (let i = 0; i < array.length; i++) {
-    for (let j = 0; j < array.length - i - 1; j++) {
-      // Compare adjacent elements
-      if (array[j] > array[j + 1]) {
-        // Swap them if they are in wrong order
-        [array[j], array[j + 1]] = [array[j + 1], array[j]];
-      }
-    }
-  }
-  return array;
-}`,
-    steps: [
-      {
-        title: 'Start New Pass',
-        description: 'Begin a new pass through the array to compare and swap adjacent elements.'
-      },
-      {
-        title: 'Compare Elements',
-        description: 'Compare two adjacent elements to determine if they need to be swapped.'
-      },
-      {
-        title: 'Swap Elements',
-        description: 'Swap the elements if they are in the wrong order (larger element before smaller).'
-      },
-      {
-        title: 'Move to Next Pair',
-        description: 'Move to the next pair of adjacent elements and repeat the comparison.'
-      },
-      {
-        title: 'Complete Pass',
-        description: 'Complete the current pass. The largest unsorted element is now in its correct position.'
       }
     ]
   },
@@ -412,15 +370,6 @@ const AlgorithmVisualizer: React.FC = () => {
         return (
           <ArrayVisualizer
             operation={id || ''}
-            currentStep={step}
-            onStepsChange={setMaxSteps}
-            speed={speed}
-          />
-        );
-      case 'sorting':
-        return (
-          <SortingVisualizer
-            algorithm={id || ''}
             currentStep={step}
             onStepsChange={setMaxSteps}
             speed={speed}

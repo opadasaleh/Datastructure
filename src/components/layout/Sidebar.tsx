@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   ChevronDown, ChevronRight, ChevronLeft,
   AlignLeft, GitBranch, Network, Database,
-  BarChart2, Binary, Share2, Grid2X2, List
+  BarChart2, Binary, Share2, Grid2X2, List, Code
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -194,293 +194,66 @@ const Sidebar: React.FC = () => {
     ]
   };
 
-  const nonLinearStructures = [
-    {
-      title: "Tree Structures",
-      icon: <GitBranch size={20} />,
-      children: [
-        {
-          title: "Binary Trees",
-          path: "/structures/binary-trees",
-          description: "Hierarchical structure where each node has at most two children"
-        },
-        {
-          title: "BST",
-          path: "/structures/binary-search-trees",
-          description: "Ordered tree structure with efficient search operations"
-        },
-        {
-          title: "AVL Trees",
-          path: "/structures/avl-trees",
-          description: "Self-balancing BST with height difference ≤ 1"
-        },
-        {
-          title: "Red-Black Trees",
-          path: "/structures/red-black-trees",
-          description: "Self-balancing BST with color properties"
-        }
-      ]
-    },
-    {
-      title: "Graph Structures",
-      icon: <Network size={20} />,
-      children: [
-        {
-          title: "Directed Graphs",
-          path: "/structures/directed-graphs",
-          description: "Edges have direction, representing one-way relationships"
-        },
-        {
-          title: "Undirected Graphs",
-          path: "/structures/undirected-graphs",
-          description: "Edges represent bidirectional relationships"
-        },
-        {
-          title: "Weighted Graphs",
-          path: "/structures/weighted-graphs",
-          description: "Edges have associated costs or weights"
-        }
-      ]
-    },
-    {
-      title: "Advanced Trees",
-      icon: <Binary size={20} />,
-      children: [
-        {
-          title: "B-Trees",
-          path: "/structures/b-trees",
-          description: "Self-balancing tree optimized for disk operations"
-        },
-        {
-          title: "Trie",
-          path: "/structures/trie",
-          description: "Tree for efficient string/prefix operations"
-        },
-        {
-          title: "Segment Trees",
-          path: "/structures/segment-trees",
-          description: "Tree for range queries and updates"
-        }
-      ]
-    },
-    {
-      title: "Hash Structures",
-      icon: <Grid2X2 size={20} />,
-      children: [
-        {
-          title: "Hash Tables",
-          path: "/structures/hash-tables",
-          description: "O(1) average case lookup using key-value pairs"
-        },
-        {
-          title: "Bloom Filters",
-          path: "/structures/bloom-filters",
-          description: "Probabilistic data structure for membership testing"
-        }
-      ]
-    },
-    {
-      title: "Network Structures",
-      icon: <Share2 size={20} />,
-      children: [
-        {
-          title: "Disjoint Sets",
-          path: "/structures/disjoint-sets",
-          description: "Track elements in non-overlapping sets"
-        },
-        {
-          title: "Network Flow",
-          path: "/structures/network-flow",
-          description: "Graph structures for flow optimization"
-        }
-      ]
-    }
-  ];
-
-  const algorithmCategories = [
-    {
-      title: "Sorting Algorithms",
-      icon: <AlignLeft size={20} />,
-      children: [
-        {
-          title: "Bubble Sort",
-          path: "/algorithms/bubble-sort",
-          description: "Simple sorting algorithm with O(n²) time complexity"
-        },
-        {
-          title: "Quick Sort",
-          path: "/algorithms/quick-sort",
-          description: "Efficient, in-place sorting with O(n log n) average case"
-        },
-        {
-          title: "Merge Sort",
-          path: "/algorithms/merge-sort",
-          description: "Stable sorting with O(n log n) time complexity"
-        }
-      ]
-    },
-    {
-      title: "Graph Algorithms",
-      icon: <Network size={20} />,
-      children: [
-        {
-          title: "Breadth First Search",
-          path: "/algorithms/bfs",
-          description: "Level by level graph traversal"
-        },
-        {
-          title: "Depth First Search",
-          path: "/algorithms/dfs",
-          description: "Recursive graph exploration"
-        },
-        {
-          title: "Dijkstra's Algorithm",
-          path: "/algorithms/dijkstra",
-          description: "Shortest path in weighted graphs"
-        }
-      ]
-    },
-    {
-      title: "Tree Algorithms",
-      icon: <GitBranch size={20} />,
-      children: [
-        {
-          title: "Tree Traversal",
-          path: "/algorithms/tree-traversal",
-          description: "In-order, pre-order, and post-order traversals"
-        },
-        {
-          title: "Binary Search",
-          path: "/algorithms/binary-search",
-          description: "Efficient searching in sorted arrays"
-        }
-      ]
-    }
-  ];
-
   const toggleSidebar = useCallback(() => {
     setIsCollapsed(prev => !prev);
   }, []);
 
   return (
     <>
-      {/* Mobile overlay */}
-      {isMobileOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={() => setIsMobileOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Mobile toggle button */}
-      <button
-        className="fixed top-4 left-4 p-2 rounded-md bg-blue-500 text-white md:hidden z-50"
-        onClick={() => setIsMobileOpen(!isMobileOpen)}
-        aria-label="Toggle navigation menu"
-      >
-        <AlignLeft size={20} />
-      </button>
-
-      <aside
+      {/* Mobile sidebar backdrop */}
+      <div
         className={`
-          fixed md:static inset-y-0 left-0 z-50
-          ${isCollapsed ? 'w-16' : 'w-72'} 
-          ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}
-          h-full overflow-y-auto border-r 
-          ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}
-          transition-all duration-300 ease-in-out
-          transform md:transform-none
-          ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          fixed inset-0 bg-black bg-opacity-50 z-20
+          lg:hidden transition-opacity duration-300
+          ${isMobileOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}
         `}
-        aria-label="Sidebar navigation"
+        onClick={() => setIsMobileOpen(false)}
+      />
+
+      {/* Sidebar */}
+      <div
+        className={`
+          fixed top-0 left-0 h-full z-30
+          transition-all duration-300 ease-in-out
+          ${isCollapsed ? 'w-20' : 'w-64'}
+          ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}
+          border-r ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}
+        `}
       >
-        <div className="p-4">
-          <div className="space-y-6">
-            {/* Data Structures Section */}
-            <div>
+        {/* Sidebar content */}
+        <div className="h-full flex flex-col">
+          {/* Header */}
+          <div className="p-4 flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Code size={24} className="text-blue-500" />
               {!isCollapsed && (
-                <h2 className="text-lg font-semibold px-3 flex items-center mb-4">
-                  <Database className="mr-2" size={20} />
-                  Data Structures
-                </h2>
+                <span className="text-lg font-semibold">Data Structures</span>
               )}
+            </div>
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              {isCollapsed ? (
+                <ChevronRight size={20} />
+              ) : (
+                <ChevronLeft size={20} />
+              )}
+            </button>
+          </div>
+
+          {/* Navigation */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="p-4">
               <nav className="space-y-1">
                 <SidebarItem {...arrayOperations} />
                 <SidebarItem {...linkedListOperations} />
-                <SidebarItem
-                  title="Linear Structures"
-                  icon={<AlignLeft size={20} />}
-                  children={[
-                    {
-                      title: "Arrays",
-                      path: "/structures/arrays",
-                      description: "Contiguous memory locations for sequential data"
-                    },
-                    {
-                      title: "Linked Lists",
-                      path: "/structures/linked-lists",
-                      description: "Connected nodes with linear traversal"
-                    },
-                    {
-                      title: "Stacks",
-                      path: "/structures/stacks",
-                      description: "LIFO data structure for push/pop operations"
-                    },
-                    {
-                      title: "Queues",
-                      path: "/structures/queues",
-                      description: "FIFO data structure for enqueue/dequeue"
-                    }
-                  ]}
-                />
-                {nonLinearStructures.map((structure, index) => (
-                  <SidebarItem
-                    key={index}
-                    title={structure.title}
-                    icon={structure.icon}
-                    children={structure.children}
-                  />
-                ))}
-              </nav>
-            </div>
-
-            {/* Algorithms Section */}
-            <div>
-              {!isCollapsed && (
-                <h2 className="text-lg font-semibold px-3 flex items-center mb-4">
-                  <BarChart2 className="mr-2" size={20} />
-                  Algorithms
-                </h2>
-              )}
-              <nav className="space-y-1">
-                {algorithmCategories.map((category, index) => (
-                  <SidebarItem
-                    key={index}
-                    title={category.title}
-                    icon={category.icon}
-                    children={category.children}
-                  />
-                ))}
               </nav>
             </div>
           </div>
         </div>
-
-        <button
-          className={`
-            absolute bottom-4 ${isCollapsed ? 'left-4' : 'right-4'}
-            p-2 rounded-full
-            ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}
-            transition-all duration-200 ease-in-out
-            focus:outline-none focus:ring-2 focus:ring-blue-500
-          `}
-          onClick={toggleSidebar}
-          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-        </button>
-      </aside>
+      </div>
     </>
   );
 };
