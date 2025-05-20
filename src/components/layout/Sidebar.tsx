@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   ChevronDown, ChevronRight, ChevronLeft,
   AlignLeft, GitBranch, Network, Database,
-  BarChart2, Binary, Share2, Grid2X2, List, Code
+  BarChart2, Binary, Share2, Grid2X2, List, Code, Menu
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -237,6 +237,19 @@ const Sidebar: React.FC = () => {
 
   return (
     <>
+      {/* Mobile menu button */}
+      <button
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+        className={`
+          fixed top-4 left-4 z-40 lg:hidden
+          p-2 rounded-md
+          ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}
+          shadow-md
+        `}
+      >
+        <Menu size={24} />
+      </button>
+
       {/* Mobile sidebar backdrop */}
       <div
         className={`
@@ -256,6 +269,7 @@ const Sidebar: React.FC = () => {
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}
           border-r ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}
+          shadow-lg
         `}
       >
         {/* Sidebar content */}
@@ -270,7 +284,7 @@ const Sidebar: React.FC = () => {
             </div>
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 hidden lg:block"
             >
               {isCollapsed ? (
                 <ChevronRight size={20} />

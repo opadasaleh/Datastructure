@@ -804,25 +804,27 @@ const AlgorithmVisualizer: React.FC = () => {
               p-4 border-b
               ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}
             `}>
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
                 <h2 className="font-semibold">Visualization</h2>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm">Speed:</span>
-                  <select
-                    value={speed}
-                    onChange={(e) => setSpeed(Number(e.target.value))}
-                    className={`
-                      rounded text-sm px-2 py-1
-                      ${theme === 'dark'
-                        ? 'bg-gray-700 border-gray-600 text-white'
-                        : 'bg-white border-gray-300 text-gray-800'}
-                    `}
-                  >
-                    <option value={0.5}>0.5x</option>
-                    <option value={1}>1x</option>
-                    <option value={2}>2x</option>
-                    <option value={4}>4x</option>
-                  </select>
+                <div className="flex items-center space-x-4 w-full sm:w-auto">
+                  <span className="text-sm whitespace-nowrap">Speed:</span>
+                  <div className="flex items-center space-x-2 flex-1 sm:flex-none sm:w-32 min-w-[120px]">
+                    <input
+                      type="range"
+                      min="0.5"
+                      max="4"
+                      step="0.5"
+                      value={speed}
+                      onChange={(e) => setSpeed(Number(e.target.value))}
+                      className={`
+                        w-full h-2 rounded-lg appearance-none cursor-pointer
+                        ${theme === 'dark'
+                          ? 'bg-gray-700 [&::-webkit-slider-thumb]:bg-blue-500 [&::-moz-range-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4'
+                          : 'bg-gray-200 [&::-webkit-slider-thumb]:bg-blue-500 [&::-moz-range-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4'}
+                      `}
+                    />
+                    <span className="text-sm min-w-[2.5rem]">{speed}x</span>
+                  </div>
                 </div>
               </div>
             </div>
