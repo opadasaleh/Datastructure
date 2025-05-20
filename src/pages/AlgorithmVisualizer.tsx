@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer';
 import LinkedListVisualizer from '../components/visualizations/LinkedListVisualizer';
+import TreeVisualizer from '../components/visualizations/TreeVisualizer';
 
 // Algorithm descriptions and code samples
 const ALGORITHMS = {
@@ -17,14 +18,26 @@ const ALGORITHMS = {
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     type: 'array',
-    code: `function insertAt(array, index, element) {
-  // Shift elements to the right
-  for (let i = array.length; i > index; i--) {
-    array[i] = array[i - 1];
-  }
-  // Insert new element
-  array[index] = element;
-  return array;
+    code: `public class ArrayOperations {
+    public static int[] insertAt(int[] array, int index, int element) {
+        // Create new array with extra space
+        int[] newArray = new int[array.length + 1];
+        
+        // Copy elements before insertion point
+        for (int i = 0; i < index; i++) {
+            newArray[i] = array[i];
+        }
+        
+        // Insert new element
+        newArray[index] = element;
+        
+        // Copy remaining elements
+        for (int i = index; i < array.length; i++) {
+            newArray[i + 1] = array[i];
+        }
+        
+        return newArray;
+    }
 }`,
     steps: [
       {
@@ -47,14 +60,23 @@ const ALGORITHMS = {
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     type: 'array',
-    code: `function deleteAt(array, index) {
-  // Shift elements to the left
-  for (let i = index; i < array.length - 1; i++) {
-    array[i] = array[i + 1];
-  }
-  // Remove last element
-  array.length--;
-  return array;
+    code: `public class ArrayOperations {
+    public static int[] deleteAt(int[] array, int index) {
+        // Create new array with one less element
+        int[] newArray = new int[array.length - 1];
+        
+        // Copy elements before deletion point
+        for (int i = 0; i < index; i++) {
+            newArray[i] = array[i];
+        }
+        
+        // Copy remaining elements
+        for (int i = index + 1; i < array.length; i++) {
+            newArray[i - 1] = array[i];
+        }
+        
+        return newArray;
+    }
 }`,
     steps: [
       {
@@ -77,13 +99,15 @@ const ALGORITHMS = {
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     type: 'array',
-    code: `function search(array, target) {
-  for (let i = 0; i < array.length; i++) {
-    if (array[i] === target) {
-      return i; // Found at index i
+    code: `public class ArrayOperations {
+    public static int search(int[] array, int target) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == target) {
+                return i; // Found at index i
+            }
+        }
+        return -1; // Not found
     }
-  }
-  return -1; // Not found
 }`,
     steps: [
       {
@@ -106,12 +130,14 @@ const ALGORITHMS = {
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     type: 'array',
-    code: `function update(array, index, newValue) {
-  if (index >= 0 && index < array.length) {
-    array[index] = newValue;
-    return true;
-  }
-  return false;
+    code: `public class ArrayOperations {
+    public static boolean update(int[] array, int index, int newValue) {
+        if (index >= 0 && index < array.length) {
+            array[index] = newValue;
+            return true;
+        }
+        return false;
+    }
 }`,
     steps: [
       {
@@ -134,32 +160,40 @@ const ALGORITHMS = {
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     type: 'linkedlist',
-    code: `function insertNode(head, value, position) {
-  // Create new node
-  const newNode = {
-    value: value,
-    next: null
-  };
-
-  // Insert at beginning
-  if (position === 0) {
-    newNode.next = head;
-    return newNode;
-  }
-
-  // Traverse to insertion point
-  let current = head;
-  for (let i = 0; i < position - 1 && current; i++) {
-    current = current.next;
-  }
-
-  if (current) {
-    // Insert node
-    newNode.next = current.next;
-    current.next = newNode;
-  }
-
-  return head;
+    code: `public class LinkedList {
+    class Node {
+        int value;
+        Node next;
+        
+        Node(int value) {
+            this.value = value;
+            this.next = null;
+        }
+    }
+    
+    public Node insertNode(Node head, int value, int position) {
+        Node newNode = new Node(value);
+        
+        // Insert at beginning
+        if (position == 0) {
+            newNode.next = head;
+            return newNode;
+        }
+        
+        // Traverse to insertion point
+        Node current = head;
+        for (int i = 0; i < position - 1 && current != null; i++) {
+            current = current.next;
+        }
+        
+        if (current != null) {
+            // Insert node
+            newNode.next = current.next;
+            current.next = newNode;
+        }
+        
+        return head;
+    }
 }`,
     steps: [
       {
@@ -186,26 +220,38 @@ const ALGORITHMS = {
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     type: 'linkedlist',
-    code: `function deleteNode(head, position) {
-  if (!head) return null;
-
-  // Delete first node
-  if (position === 0) {
-    return head.next;
-  }
-
-  // Traverse to node before deletion point
-  let current = head;
-  for (let i = 0; i < position - 1 && current.next; i++) {
-    current = current.next;
-  }
-
-  // Delete node
-  if (current.next) {
-    current.next = current.next.next;
-  }
-
-  return head;
+    code: `public class LinkedList {
+    class Node {
+        int value;
+        Node next;
+        
+        Node(int value) {
+            this.value = value;
+            this.next = null;
+        }
+    }
+    
+    public Node deleteNode(Node head, int position) {
+        if (head == null) return null;
+        
+        // Delete first node
+        if (position == 0) {
+            return head.next;
+        }
+        
+        // Traverse to node before deletion point
+        Node current = head;
+        for (int i = 0; i < position - 1 && current.next != null; i++) {
+            current = current.next;
+        }
+        
+        // Delete node
+        if (current.next != null) {
+            current.next = current.next.next;
+        }
+        
+        return head;
+    }
 }`,
     steps: [
       {
@@ -228,19 +274,31 @@ const ALGORITHMS = {
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     type: 'linkedlist',
-    code: `function searchNode(head, value) {
-  let current = head;
-  let position = 0;
-
-  while (current) {
-    if (current.value === value) {
-      return position;
+    code: `public class LinkedList {
+    class Node {
+        int value;
+        Node next;
+        
+        Node(int value) {
+            this.value = value;
+            this.next = null;
+        }
     }
-    current = current.next;
-    position++;
-  }
-
-  return -1; // Not found
+    
+    public int searchNode(Node head, int value) {
+        Node current = head;
+        int position = 0;
+        
+        while (current != null) {
+            if (current.value == value) {
+                return position;
+            }
+            current = current.next;
+            position++;
+        }
+        
+        return -1; // Not found
+    }
 }`,
     steps: [
       {
@@ -267,21 +325,33 @@ const ALGORITHMS = {
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     type: 'linkedlist',
-    code: `function updateNode(head, position, newValue) {
-  let current = head;
-
-  // Traverse to the node
-  for (let i = 0; i < position && current; i++) {
-    current = current.next;
-  }
-
-  // Update value if node exists
-  if (current) {
-    current.value = newValue;
-    return true;
-  }
-
-  return false;
+    code: `public class LinkedList {
+    class Node {
+        int value;
+        Node next;
+        
+        Node(int value) {
+            this.value = value;
+            this.next = null;
+        }
+    }
+    
+    public boolean updateNode(Node head, int position, int newValue) {
+        Node current = head;
+        
+        // Traverse to the node
+        for (int i = 0; i < position && current != null; i++) {
+            current = current.next;
+        }
+        
+        // Update value if node exists
+        if (current != null) {
+            current.value = newValue;
+            return true;
+        }
+        
+        return false;
+    }
 }`,
     steps: [
       {
@@ -295,6 +365,303 @@ const ALGORITHMS = {
       {
         title: 'Complete Operation',
         description: 'The node\'s value has been updated.'
+      }
+    ]
+  },
+  'tree-insert': {
+    title: 'Tree Insertion',
+    description: 'Insert a new node into a binary search tree while maintaining the BST property.',
+    timeComplexity: 'O(h) where h is height',
+    spaceComplexity: 'O(1)',
+    type: 'tree',
+    code: `public class BinarySearchTree {
+    class Node {
+        int value;
+        Node left;
+        Node right;
+        
+        Node(int value) {
+            this.value = value;
+            this.left = null;
+            this.right = null;
+        }
+    }
+    
+    public Node insert(Node root, int value) {
+        if (root == null) {
+            return new Node(value);
+        }
+        
+        if (value < root.value) {
+            root.left = insert(root.left, value);
+        } else {
+            root.right = insert(root.right, value);
+        }
+        
+        return root;
+    }
+}`,
+    steps: [
+      {
+        title: 'Check Empty Tree',
+        description: 'If tree is empty, create new root node.'
+      },
+      {
+        title: 'Compare Values',
+        description: 'Compare new value with current node.'
+      },
+      {
+        title: 'Recursive Insert',
+        description: 'Recursively insert into left or right subtree.'
+      },
+      {
+        title: 'Complete Operation',
+        description: 'Return the updated tree structure.'
+      }
+    ]
+  },
+  'tree-delete': {
+    title: 'Tree Deletion',
+    description: 'Delete a node from a binary search tree while maintaining the BST property.',
+    timeComplexity: 'O(h) where h is height',
+    spaceComplexity: 'O(1)',
+    type: 'tree',
+    code: `public class BinarySearchTree {
+    class Node {
+        int value;
+        Node left;
+        Node right;
+        
+        Node(int value) {
+            this.value = value;
+            this.left = null;
+            this.right = null;
+        }
+    }
+    
+    public Node deleteNode(Node root, int value) {
+        if (root == null) return null;
+        
+        if (value < root.value) {
+            root.left = deleteNode(root.left, value);
+        } else if (value > root.value) {
+            root.right = deleteNode(root.right, value);
+        } else {
+            // Node with only one child or no child
+            if (root.left == null) return root.right;
+            if (root.right == null) return root.left;
+            
+            // Node with two children
+            Node successor = findMin(root.right);
+            root.value = successor.value;
+            root.right = deleteNode(root.right, successor.value);
+        }
+        return root;
+    }
+    
+    private Node findMin(Node node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+}`,
+    steps: [
+      {
+        title: 'Find Node',
+        description: 'Locate the node to be deleted.'
+      },
+      {
+        title: 'Handle Leaf Node',
+        description: 'If node has no children, simply remove it.'
+      },
+      {
+        title: 'Handle Single Child',
+        description: 'If node has one child, replace with child.'
+      },
+      {
+        title: 'Handle Two Children',
+        description: 'If node has two children, find inorder successor.'
+      },
+      {
+        title: 'Complete Operation',
+        description: 'Return the updated tree structure.'
+      }
+    ]
+  },
+  'tree-search': {
+    title: 'Tree Search',
+    description: 'Search for a value in a binary search tree.',
+    timeComplexity: 'O(h) where h is height',
+    spaceComplexity: 'O(1)',
+    type: 'tree',
+    code: `public class BinarySearchTree {
+    class Node {
+        int value;
+        Node left;
+        Node right;
+        
+        Node(int value) {
+            this.value = value;
+            this.left = null;
+            this.right = null;
+        }
+    }
+    
+    public Node search(Node root, int value) {
+        if (root == null || root.value == value) {
+            return root;
+        }
+        
+        if (value < root.value) {
+            return search(root.left, value);
+        }
+        
+        return search(root.right, value);
+    }
+}`,
+    steps: [
+      {
+        title: 'Check Root',
+        description: 'Check if root is null or contains target value.'
+      },
+      {
+        title: 'Compare Values',
+        description: 'Compare target with current node value.'
+      },
+      {
+        title: 'Recursive Search',
+        description: 'Search in appropriate subtree.'
+      },
+      {
+        title: 'Complete Search',
+        description: 'Return found node or null.'
+      }
+    ]
+  },
+  'tree-traverse-inorder': {
+    title: 'Inorder Traversal',
+    description: 'Traverse a binary tree in inorder fashion (Left -> Root -> Right).',
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(h)',
+    type: 'tree',
+    code: `public class BinarySearchTree {
+    class Node {
+        int value;
+        Node left;
+        Node right;
+        
+        Node(int value) {
+            this.value = value;
+            this.left = null;
+            this.right = null;
+        }
+    }
+    
+    public void inorderTraversal(Node root) {
+        if (root != null) {
+            inorderTraversal(root.left);
+            System.out.println(root.value);
+            inorderTraversal(root.right);
+        }
+    }
+}`,
+    steps: [
+      {
+        title: 'Visit Left Subtree',
+        description: 'Recursively traverse the left subtree.'
+      },
+      {
+        title: 'Visit Root',
+        description: 'Process the current node.'
+      },
+      {
+        title: 'Visit Right Subtree',
+        description: 'Recursively traverse the right subtree.'
+      }
+    ]
+  },
+  'tree-traverse-preorder': {
+    title: 'Preorder Traversal',
+    description: 'Traverse a binary tree in preorder fashion (Root -> Left -> Right).',
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(h)',
+    type: 'tree',
+    code: `public class BinarySearchTree {
+    class Node {
+        int value;
+        Node left;
+        Node right;
+        
+        Node(int value) {
+            this.value = value;
+            this.left = null;
+            this.right = null;
+        }
+    }
+    
+    public void preorderTraversal(Node root) {
+        if (root != null) {
+            System.out.println(root.value);
+            preorderTraversal(root.left);
+            preorderTraversal(root.right);
+        }
+    }
+}`,
+    steps: [
+      {
+        title: 'Visit Root',
+        description: 'Process the current node.'
+      },
+      {
+        title: 'Visit Left Subtree',
+        description: 'Recursively traverse the left subtree.'
+      },
+      {
+        title: 'Visit Right Subtree',
+        description: 'Recursively traverse the right subtree.'
+      }
+    ]
+  },
+  'tree-traverse-postorder': {
+    title: 'Postorder Traversal',
+    description: 'Traverse a binary tree in postorder fashion (Left -> Right -> Root).',
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(h)',
+    type: 'tree',
+    code: `public class BinarySearchTree {
+    class Node {
+        int value;
+        Node left;
+        Node right;
+        
+        Node(int value) {
+            this.value = value;
+            this.left = null;
+            this.right = null;
+        }
+    }
+    
+    public void postorderTraversal(Node root) {
+        if (root != null) {
+            postorderTraversal(root.left);
+            postorderTraversal(root.right);
+            System.out.println(root.value);
+        }
+    }
+}`,
+    steps: [
+      {
+        title: 'Visit Left Subtree',
+        description: 'Recursively traverse the left subtree.'
+      },
+      {
+        title: 'Visit Right Subtree',
+        description: 'Recursively traverse the right subtree.'
+      },
+      {
+        title: 'Visit Root',
+        description: 'Process the current node.'
       }
     ]
   }
@@ -378,6 +745,15 @@ const AlgorithmVisualizer: React.FC = () => {
       case 'linkedlist':
         return (
           <LinkedListVisualizer
+            operation={id || ''}
+            currentStep={step}
+            onStepsChange={setMaxSteps}
+            speed={speed}
+          />
+        );
+      case 'tree':
+        return (
+          <TreeVisualizer
             operation={id || ''}
             currentStep={step}
             onStepsChange={setMaxSteps}

@@ -128,6 +128,97 @@ const SidebarItem: React.FC<SidebarItemProps> = memo(({ title, icon, path, child
 
 SidebarItem.displayName = 'SidebarItem';
 
+const SIDEBAR_ITEMS = [
+  {
+    title: 'Array Operations',
+    icon: <AlignLeft size={20} />,
+    children: [
+      {
+        title: 'Insertion',
+        path: '/algorithms/array-insert',
+        description: 'Insert elements at any position'
+      },
+      {
+        title: 'Deletion',
+        path: '/algorithms/array-delete',
+        description: 'Remove elements from any position'
+      },
+      {
+        title: 'Search',
+        path: '/algorithms/array-search',
+        description: 'Find elements in the array'
+      },
+      {
+        title: 'Update',
+        path: '/algorithms/array-update',
+        description: 'Modify elements at any position'
+      }
+    ]
+  },
+  {
+    title: 'Linked List Operations',
+    icon: <List size={20} />,
+    children: [
+      {
+        title: 'Insertion',
+        path: '/algorithms/linkedlist-insert',
+        description: 'Insert a new node into the list'
+      },
+      {
+        title: 'Deletion',
+        path: '/algorithms/linkedlist-delete',
+        description: 'Remove a node from the list'
+      },
+      {
+        title: 'Search',
+        path: '/algorithms/linkedlist-search',
+        description: 'Find a value in the list'
+      },
+      {
+        title: 'Update',
+        path: '/algorithms/linkedlist-update',
+        description: "Modify a node's value"
+      }
+    ]
+  },
+  {
+    title: 'Tree Operations',
+    icon: <GitBranch size={20} />,
+    children: [
+      {
+        title: 'Insertion',
+        path: '/algorithms/tree-insert',
+        description: 'Insert a new node into the tree'
+      },
+      {
+        title: 'Deletion',
+        path: '/algorithms/tree-delete',
+        description: 'Remove a node from the tree'
+      },
+      {
+        title: 'Search',
+        path: '/algorithms/tree-search',
+        description: 'Find a value in the tree'
+      },
+      {
+        title: 'Inorder Traversal',
+        path: '/algorithms/tree-traverse-inorder',
+        description: 'Traverse tree in Left -> Root -> Right order'
+      },
+      {
+        title: 'Preorder Traversal',
+        path: '/algorithms/tree-traverse-preorder',
+        description: 'Traverse tree in Root -> Left -> Right order'
+      },
+      {
+        title: 'Postorder Traversal',
+        path: '/algorithms/tree-traverse-postorder',
+        description: 'Traverse tree in Left -> Right -> Root order'
+      }
+    ]
+  }
+];
+
 // Main Sidebar component
 const Sidebar: React.FC = () => {
   const { theme } = useTheme();
@@ -139,60 +230,6 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     setIsMobileOpen(false);
   }, [location.pathname]);
-
-  const arrayOperations = {
-    title: "Array Operations",
-    icon: <AlignLeft size={20} />,
-    children: [
-      {
-        title: "Insertion",
-        path: "/algorithms/array-insert",
-        description: "Insert elements at any position"
-      },
-      {
-        title: "Deletion",
-        path: "/algorithms/array-delete",
-        description: "Remove elements from any position"
-      },
-      {
-        title: "Search",
-        path: "/algorithms/array-search",
-        description: "Find elements in the array"
-      },
-      {
-        title: "Update",
-        path: "/algorithms/array-update",
-        description: "Modify elements at any position"
-      }
-    ]
-  };
-
-  const linkedListOperations = {
-    title: "Linked List Operations",
-    icon: <List size={20} />,
-    children: [
-      {
-        title: "Insertion",
-        path: "/algorithms/linkedlist-insert",
-        description: "Insert a new node into the list"
-      },
-      {
-        title: "Deletion",
-        path: "/algorithms/linkedlist-delete",
-        description: "Remove a node from the list"
-      },
-      {
-        title: "Search",
-        path: "/algorithms/linkedlist-search",
-        description: "Find a value in the list"
-      },
-      {
-        title: "Update",
-        path: "/algorithms/linkedlist-update",
-        description: "Modify a node's value"
-      }
-    ]
-  };
 
   const toggleSidebar = useCallback(() => {
     setIsCollapsed(prev => !prev);
@@ -247,8 +284,9 @@ const Sidebar: React.FC = () => {
           <div className="flex-1 overflow-y-auto">
             <div className="p-4">
               <nav className="space-y-1">
-                <SidebarItem {...arrayOperations} />
-                <SidebarItem {...linkedListOperations} />
+                {SIDEBAR_ITEMS.map((item, index) => (
+                  <SidebarItem key={index} {...item} />
+                ))}
               </nav>
             </div>
           </div>
