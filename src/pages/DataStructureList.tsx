@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
-import { 
-  AlignLeft, GitBranch, Network, Database, 
+import {
+  AlignLeft, GitBranch, Network, Database,
   LayoutGrid, Layers, ArrowRight
 } from 'lucide-react';
 
@@ -14,7 +14,7 @@ const CategoryCard: React.FC<{
   structures: Array<{ name: string; path: string; }>;
 }> = ({ title, description, icon, color, structures }) => {
   const { theme } = useTheme();
-  
+
   return (
     <div className={`
       rounded-xl overflow-hidden shadow-lg
@@ -27,7 +27,7 @@ const CategoryCard: React.FC<{
         </div>
         <h3 className="text-xl font-bold text-white">{title}</h3>
       </div>
-      
+
       <div className="p-6">
         <p className={`
           mb-6 
@@ -35,16 +35,16 @@ const CategoryCard: React.FC<{
         `}>
           {description}
         </p>
-        
+
         <ul className="space-y-3">
           {structures.map((structure, index) => (
             <li key={index}>
-              <Link 
+              <Link
                 to={structure.path}
                 className={`
                   flex items-center justify-between p-3 rounded-lg
-                  ${theme === 'dark' 
-                    ? 'bg-gray-700 hover:bg-gray-600' 
+                  ${theme === 'dark'
+                    ? 'bg-gray-700 hover:bg-gray-600'
                     : 'bg-gray-50 hover:bg-gray-100'}
                   transition-colors duration-200
                 `}
@@ -62,7 +62,7 @@ const CategoryCard: React.FC<{
 
 const DataStructureList: React.FC = () => {
   const { theme } = useTheme();
-  
+
   const categories = [
     {
       title: 'Linear Structures',
@@ -137,7 +137,7 @@ const DataStructureList: React.FC = () => {
       ]
     }
   ];
-  
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="text-center mb-16">
@@ -152,7 +152,7 @@ const DataStructureList: React.FC = () => {
           Each topic includes visualizations, code examples, and step-by-step explanations.
         </p>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
         {categories.map((category, index) => (
           <CategoryCard key={index} {...category} />

@@ -95,7 +95,7 @@ const SidebarItem: React.FC<SidebarItemProps> = memo(({ title, icon, path, child
                       whitespace-nowrap opacity-0 group-hover:opacity-100
                       pointer-events-none transition-all duration-200
                       ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}
-                      shadow-lg z-50 max-w-xs transform translate-x-0
+                      shadow-lg z-50 max-walgorithms-xs transform translate-x-0
                       group-hover:translate-x-2
                     `}
                       role="tooltip"
@@ -135,7 +135,7 @@ const SIDEBAR_ITEMS = [
     children: [
       {
         title: 'Insertion',
-        path: '/algorithms/array-insert',
+        path: '//array-insert',
         description: 'Insert elements at any position'
       },
       {

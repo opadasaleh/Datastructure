@@ -7,7 +7,9 @@ import { motion } from '../utils/motionHelpers';
 const HomePage: React.FC = () => {
   const { theme } = useTheme();
   const [currentStructure, setCurrentStructure] = useState(0);
-  
+
+  // Preserved for future use
+  /*
   const featuredStructures = [
     { name: 'Binary Trees', path: '/structures/binary-trees', color: 'from-green-500 to-emerald-700' },
     { name: 'Graph Algorithms', path: '/structures/graph-traversal', color: 'from-blue-500 to-indigo-700' },
@@ -22,12 +24,13 @@ const HomePage: React.FC = () => {
     
     return () => clearInterval(timer);
   }, []);
+  */
 
   return (
     <div className="space-y-16">
       {/* Hero Section */}
       <section className="text-center py-16 px-4">
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -38,7 +41,7 @@ const HomePage: React.FC = () => {
           </span>{' '}
           Data Structures & Algorithms
         </motion.h1>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -47,7 +50,7 @@ const HomePage: React.FC = () => {
           Interactive visualizations, step-by-step walkthroughs, and comprehensive explanations
           to help you master the fundamentals of computer science.
         </motion.p>
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
@@ -70,7 +73,7 @@ const HomePage: React.FC = () => {
         </motion.div>
       </section>
 
-      {/* Featured Data Structure */}
+      {/* Preserved for future use
       <section className="py-12 px-4">
         <div className={`
           rounded-2xl overflow-hidden shadow-2xl max-w-5xl mx-auto
@@ -145,7 +148,6 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Features Grid */}
       <section className="py-12 px-4">
         <h2 className="text-3xl font-bold text-center mb-12">
           Master Data Structures & Algorithms
@@ -218,7 +220,6 @@ const HomePage: React.FC = () => {
         </div>
       </section>
       
-      {/* CTA Section */}
       <section className={`
         py-16 px-4 rounded-2xl mx-4 md:mx-8 lg:mx-16
         bg-gradient-to-r from-blue-500 to-indigo-600 text-white
@@ -238,6 +239,7 @@ const HomePage: React.FC = () => {
           </Link>
         </div>
       </section>
+      */}
     </div>
   );
 };
