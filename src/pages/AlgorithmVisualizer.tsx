@@ -56,7 +56,7 @@ const ALGORITHMS = {
   },
   'array-delete': {
     title: 'Array Deletion',
-    description: 'Remove an element from a specific index in the array, shifting remaining elements to fill the gap.',
+    description: 'Remove an element from an array at a specific index, shifting remaining elements to fill the gap.',
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     type: 'array',
@@ -85,11 +85,11 @@ const ALGORITHMS = {
       },
       {
         title: 'Remove Element',
-        description: 'Remove the selected element and shift remaining elements.'
+        description: 'Delete the element and shift remaining elements to fill the gap.'
       },
       {
         title: 'Complete Operation',
-        description: 'The element has been removed and the array is reindexed.'
+        description: 'The element has been removed and the array is ready for more operations.'
       }
     ]
   },

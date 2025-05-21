@@ -135,7 +135,7 @@ const SIDEBAR_ITEMS = [
     children: [
       {
         title: 'Insertion',
-        path: '//array-insert',
+        path: '/algorithms/array-insert',
         description: 'Insert elements at any position'
       },
       {

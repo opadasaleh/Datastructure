@@ -17,9 +17,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       transition-colors duration-300
     `}>
       <Navbar />
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12 lg:ml-64">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>

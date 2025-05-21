@@ -61,35 +61,38 @@ const ArrayVisualizer: React.FC<ArrayVisualizerProps> = ({
                 const newValue = 45;
                 const insertIndex = 3;
 
+                // Create a new array with one more element
+                const newArray = [...array, { value: 0, isActive: false, isHighlighted: false, isNew: false, isDeleting: false }];
+
                 // Highlight the insertion point
-                const highlightStep = array.map((el, idx) => ({
+                const highlightStep = newArray.map((el, idx) => ({
                     ...el,
                     isHighlighted: idx === insertIndex
                 }));
                 steps.push(JSON.parse(JSON.stringify(highlightStep)));
 
                 // Show elements shifting right
-                for (let i = array.length - 1; i >= insertIndex; i--) {
-                    array[i + 1] = { ...array[i], isHighlighted: true };
-                    steps.push(JSON.parse(JSON.stringify(array)));
+                for (let i = newArray.length - 2; i >= insertIndex; i--) {
+                    newArray[i + 1] = { ...newArray[i], isHighlighted: true };
+                    steps.push(JSON.parse(JSON.stringify(newArray)));
                 }
 
                 // Show the new element appearing
-                array[insertIndex] = {
+                newArray[insertIndex] = {
                     value: newValue,
                     isActive: false,
                     isHighlighted: false,
                     isNew: true,
                     isDeleting: false
                 };
-                steps.push(JSON.parse(JSON.stringify(array)));
+                steps.push(JSON.parse(JSON.stringify(newArray)));
 
                 // Reset states
-                array.forEach(el => {
+                newArray.forEach(el => {
                     el.isNew = false;
                     el.isHighlighted = false;
                 });
-                steps.push(JSON.parse(JSON.stringify(array)));
+                steps.push(JSON.parse(JSON.stringify(newArray)));
                 break;
             }
 
