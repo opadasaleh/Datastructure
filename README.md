@@ -20,13 +20,14 @@ An interactive web application for visualizing data structures and algorithms. B
 
 ## Getting Started
 
-1. Clone the repository:
+1. Download the repository:
 ```bash
-install  repo
+from "Code" - download ZIP 
 ```
 
 2. Install dependencies:
 ```bash
+in your terminal : 
 npm install
 # or
 yarn install
