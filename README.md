@@ -27,8 +27,8 @@ from "Code" - download ZIP
 ```
 
 2. Install dependencies:
-```bash
 in your terminal : 
+```bash
 npm install
 # or
 yarn install
