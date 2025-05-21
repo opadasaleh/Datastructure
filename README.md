@@ -1,7 +1,7 @@
 # Data Structures & Algorithms Visualizer
 
 An interactive web application for visualizing data structures and algorithms. Built with React, TypeScript, and Tailwind CSS.
-### For example array insert 
+### For example Insert a new element into an array at a specific index, shifting existing elements to make space 
 ![](.//src/components/assets/array%20insert.gif)
 ## Features
 
