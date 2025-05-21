@@ -25,9 +25,6 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/structures" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-100 dark:hover:bg-gray-700 transition">
-              Data Structures
-            </Link>
             <Link to="/quiz" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-100 dark:hover:bg-gray-700 transition">
               Quizzes
             </Link>

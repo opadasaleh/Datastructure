@@ -1,30 +1,92 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Code, BookOpen, BarChart2, ListChecks } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import {
+  AlignLeft,
+  List,
+  GitBranch,
+  ArrowRight,
+  Code,
+  Star
+} from 'lucide-react';
 import { motion } from '../utils/motionHelpers';
 
 const HomePage: React.FC = () => {
   const { theme } = useTheme();
-  const [currentStructure, setCurrentStructure] = useState(0);
 
-  // Preserved for future use
-  /*
   const featuredStructures = [
-    { name: 'Binary Trees', path: '/structures/binary-trees', color: 'from-green-500 to-emerald-700' },
-    { name: 'Graph Algorithms', path: '/structures/graph-traversal', color: 'from-blue-500 to-indigo-700' },
-    { name: 'Hash Tables', path: '/structures/hash-tables', color: 'from-purple-500 to-violet-700' },
-    { name: 'Linked Lists', path: '/structures/linked-lists', color: 'from-orange-500 to-amber-700' },
+    {
+      title: 'Binary Search Tree',
+      icon: <GitBranch size={24} />,
+      description: 'A hierarchical data structure where each node has at most two children.',
+      path: '/algorithms/tree-insert',
+      features: [
+        'Efficient search operations',
+        'Maintains sorted order',
+        'Balanced structure for optimal performance'
+      ]
+    },
+    {
+      title: 'Linked List',
+      icon: <List size={24} />,
+      description: 'A linear data structure where each node points to the next node in the sequence.',
+      path: '/algorithms/linkedlist-insert',
+      features: [
+        'Dynamic size',
+        'Efficient insertion and deletion',
+        'Sequential access to elements'
+      ]
+    },
+    {
+      title: 'Array',
+      icon: <AlignLeft size={24} />,
+      description: 'A fixed-size collection of elements stored in contiguous memory locations.',
+      path: '/algorithms/array-insert',
+      features: [
+        'Constant time random access',
+        'Fixed size',
+        'Contiguous memory allocation'
+      ]
+    }
   ];
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentStructure(prev => (prev + 1) % featuredStructures.length);
-    }, 5000);
-    
-    return () => clearInterval(timer);
-  }, []);
-  */
+  const categories = [
+    {
+      title: 'Array Operations',
+      icon: <AlignLeft size={24} />,
+      description: 'Learn and visualize array operations including insertion, deletion, search, and updates.',
+      items: [
+        { title: 'Insertion', path: '/algorithms/array-insert', description: 'Insert elements at any position' },
+        { title: 'Deletion', path: '/algorithms/array-delete', description: 'Remove elements from any position' },
+        { title: 'Search', path: '/algorithms/array-search', description: 'Find elements in the array' },
+        { title: 'Update', path: '/algorithms/array-update', description: 'Modify elements at any position' }
+      ]
+    },
+    {
+      title: 'Linked List Operations',
+      icon: <List size={24} />,
+      description: 'Explore linked list operations with interactive visualizations.',
+      items: [
+        { title: 'Insertion', path: '/algorithms/linkedlist-insert', description: 'Insert a new node into the list' },
+        { title: 'Deletion', path: '/algorithms/linkedlist-delete', description: 'Remove a node from the list' },
+        { title: 'Search', path: '/algorithms/linkedlist-search', description: 'Find a value in the list' },
+        { title: 'Update', path: '/algorithms/linkedlist-update', description: "Modify a node's value" }
+      ]
+    },
+    {
+      title: 'Tree Operations',
+      icon: <GitBranch size={24} />,
+      description: 'Master tree data structure operations with step-by-step visualizations.',
+      items: [
+        { title: 'Insertion', path: '/algorithms/tree-insert', description: 'Insert a new node into the tree' },
+        { title: 'Deletion', path: '/algorithms/tree-delete', description: 'Remove a node from the tree' },
+        { title: 'Search', path: '/algorithms/tree-search', description: 'Find a value in the tree' },
+        { title: 'Inorder Traversal', path: '/algorithms/tree-traverse-inorder', description: 'Traverse tree in Left -> Root -> Right order' },
+        { title: 'Preorder Traversal', path: '/algorithms/tree-traverse-preorder', description: 'Traverse tree in Root -> Left -> Right order' },
+        { title: 'Postorder Traversal', path: '/algorithms/tree-traverse-postorder', description: 'Traverse tree in Left -> Right -> Root order' }
+      ]
+    }
+  ];
 
   return (
     <div className="space-y-16">
@@ -50,196 +112,138 @@ const HomePage: React.FC = () => {
           Interactive visualizations, step-by-step walkthroughs, and comprehensive explanations
           to help you master the fundamentals of computer science.
         </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="flex flex-wrap justify-center gap-4"
-        >
-          <Link to="/structures" className={`
-            px-6 py-3 rounded-lg text-white font-medium 
-            bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700
-            shadow-lg hover:shadow-xl transform transition-all duration-200 hover:-translate-y-1
-          `}>
-            Explore Data Structures
-          </Link>
-          <Link to="/quiz" className={`
-            px-6 py-3 rounded-lg font-medium 
-            ${theme === 'dark' ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}
-            shadow-md hover:shadow-lg transform transition-all duration-200 hover:-translate-y-1
-          `}>
-            Test Your Knowledge
-          </Link>
-        </motion.div>
       </section>
 
-      {/* Preserved for future use
-      <section className="py-12 px-4">
-        <div className={`
-          rounded-2xl overflow-hidden shadow-2xl max-w-5xl mx-auto
-          ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}
-        `}>
-          <div className={`
-            h-48 md:h-64 bg-gradient-to-r ${featuredStructures[currentStructure].color}
-            flex items-center justify-center
-          `}>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
-              {featuredStructures[currentStructure].name}
-            </h2>
-          </div>
-          <div className="p-8">
-            <div className="flex justify-between items-center mb-6">
-              <div className="space-x-2">
-                {featuredStructures.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentStructure(index)}
+      {/* Featured Data Structures */}
+      <section className="space-y-4">
+        <div className="flex items-center space-x-2">
+          <Star size={24} className="text-yellow-500" />
+          <h2 className="text-2xl font-bold">Featured Data Structures</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {featuredStructures.map((structure, index) => (
+            <Link
+              key={index}
+              to={structure.path}
+              className={`
+                                rounded-lg overflow-hidden
+                                ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}
+                                shadow-lg border ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}
+                                transition-all duration-300 hover:shadow-xl
+                                group
+                            `}
+            >
+              <div className="p-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="text-blue-500">{structure.icon}</div>
+                  <h3 className="text-xl font-semibold">{structure.title}</h3>
+                </div>
+                <p className={`
+                                    text-sm mb-4
+                                    ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}
+                                `}>
+                  {structure.description}
+                </p>
+                <ul className="space-y-2">
+                  {structure.features.map((feature, featureIndex) => (
+                    <li
+                      key={featureIndex}
+                      className={`
+                                                flex items-center space-x-2 text-sm
+                                                ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}
+                                            `}
+                    >
+                      <div className={`
+                                                w-1.5 h-1.5 rounded-full
+                                                ${theme === 'dark' ? 'bg-blue-500' : 'bg-blue-400'}
+                                            `} />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-4 flex justify-end">
+                  <ArrowRight
+                    size={20}
                     className={`
-                      w-3 h-3 rounded-full
-                      ${currentStructure === index ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'}
-                      transition-colors duration-200
-                    `}
+                                            text-blue-500 transform transition-transform duration-200
+                                            group-hover:translate-x-1
+                                        `}
                   />
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Categories Grid */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-bold">Explore Operations</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((category, index) => (
+            <div
+              key={index}
+              className={`
+                                rounded-lg overflow-hidden
+                                ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}
+                                shadow-lg border ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}
+                                transition-all duration-300 hover:shadow-xl
+                            `}
+            >
+              {/* Category Header */}
+              <div className={`
+                                p-6 border-b ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}
+                            `}>
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="text-blue-500">{category.icon}</div>
+                  <h2 className="text-xl font-semibold">{category.title}</h2>
+                </div>
+                <p className={`
+                                    text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}
+                                `}>
+                  {category.description}
+                </p>
+              </div>
+
+              {/* Operations List */}
+              <div className="divide-y divide-gray-200 dark:divide-gray-700">
+                {category.items.map((item, itemIndex) => (
+                  <Link
+                    key={itemIndex}
+                    to={item.path}
+                    className={`
+                                            block p-3 rounded-md
+                                            ${theme === 'dark'
+                        ? 'hover:bg-gray-700 text-gray-200'
+                        : 'hover:bg-gray-50 text-gray-700'}
+                                            transition-colors duration-200
+                                            group
+                                        `}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-medium">{item.title}</h3>
+                        <p className={`
+                                                    text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}
+                                                `}>
+                          {item.description}
+                        </p>
+                      </div>
+                      <ArrowRight
+                        size={20}
+                        className={`
+                                                    text-blue-500 transform transition-transform duration-200
+                                                    group-hover:translate-x-1
+                                                `}
+                      />
+                    </div>
+                  </Link>
                 ))}
               </div>
-              <Link 
-                to={featuredStructures[currentStructure].path}
-                className="flex items-center text-blue-500 hover:text-blue-600 transition-colors duration-200"
-              >
-                View Now <ArrowRight size={16} className="ml-1" />
-              </Link>
             </div>
-            
-            <p className={`
-              text-lg mb-4
-              ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}
-            `}>
-              Explore interactive visualizations and learn the core concepts at your own pace.
-            </p>
-            
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className={`
-                p-4 rounded-lg border
-                ${theme === 'dark' ? 'border-gray-700 bg-gray-700/50' : 'border-gray-200 bg-gray-50'}
-              `}>
-                <div className="flex items-center mb-2">
-                  <BookOpen size={20} className="mr-2 text-blue-500" />
-                  <h3 className="font-medium">Learn Concepts</h3>
-                </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Understand the theory with clear explanations
-                </p>
-              </div>
-              
-              <div className={`
-                p-4 rounded-lg border
-                ${theme === 'dark' ? 'border-gray-700 bg-gray-700/50' : 'border-gray-200 bg-gray-50'}
-              `}>
-                <div className="flex items-center mb-2">
-                  <Code size={20} className="mr-2 text-green-500" />
-                  <h3 className="font-medium">Code Examples</h3>
-                </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  See implementations in multiple languages
-                </p>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
-
-      <section className="py-12 px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          Master Data Structures & Algorithms
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className={`
-              p-6 rounded-xl shadow-lg
-              ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}
-            `}
-          >
-            <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mb-4">
-              <BookOpen size={24} className="text-blue-500" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Visual Learning</h3>
-            <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-              Interactive visualizations that bring concepts to life
-            </p>
-          </motion.div>
-          
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className={`
-              p-6 rounded-xl shadow-lg
-              ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}
-            `}
-          >
-            <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mb-4">
-              <Code size={24} className="text-green-500" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Code Examples</h3>
-            <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-              Implementation examples in multiple programming languages
-            </p>
-          </motion.div>
-          
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className={`
-              p-6 rounded-xl shadow-lg
-              ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}
-            `}
-          >
-            <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
-              <BarChart2 size={24} className="text-purple-500" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Algorithm Analysis</h3>
-            <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-              Understand time and space complexity with clear explanations
-            </p>
-          </motion.div>
-          
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className={`
-              p-6 rounded-xl shadow-lg
-              ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}
-            `}
-          >
-            <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-4">
-              <ListChecks size={24} className="text-amber-500" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Practice Quizzes</h3>
-            <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-              Test your knowledge with interactive quizzes and challenges
-            </p>
-          </motion.div>
-        </div>
-      </section>
-      
-      <section className={`
-        py-16 px-4 rounded-2xl mx-4 md:mx-8 lg:mx-16
-        bg-gradient-to-r from-blue-500 to-indigo-600 text-white
-      `}>
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to master data structures?
-          </h2>
-          <p className="text-xl mb-8 text-blue-100">
-            Start your journey with our interactive visualizations and comprehensive guides.
-          </p>
-          <Link to="/structures" className={`
-            px-8 py-4 rounded-lg text-blue-600 font-medium bg-white
-            shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-gray-100
-          `}>
-            Get Started Now
-          </Link>
-        </div>
-      </section>
-      */}
     </div>
   );
 };
