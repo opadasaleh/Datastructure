@@ -22,8 +22,7 @@ An interactive web application for visualizing data structures and algorithms. B
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/data-structures-visualizer.git
-cd data-structures-visualizer
+install the repo
 ```
 
 2. Install dependencies:
