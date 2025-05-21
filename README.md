@@ -22,7 +22,7 @@ An interactive web application for visualizing data structures and algorithms. B
 
 1. Clone the repository:
 ```bash
-install the repo
+install  repo
 ```
 
 2. Install dependencies:
@@ -44,17 +44,6 @@ yarn dev
 http://localhost:5173
 ```
 
-## Project Structure
-
-```
-src/
-├── components/
-│   ├── layout/          # Layout components (Sidebar, Header)
-│   └── visualizations/  # Data structure visualizers
-├── contexts/           # React contexts (Theme)
-├── pages/             # Page components
-└── utils/             # Utility functions
-```
 
 ## Available Visualizations
 
@@ -76,14 +65,4 @@ src/
 - Search
 - Traversal (Inorder, Preorder, Postorder)
 
-## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
