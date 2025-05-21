@@ -1,7 +1,6 @@
 import React from 'react';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-import Footer from './Footer';
 import { useTheme } from '../../contexts/ThemeContext';
 
 interface LayoutProps {
@@ -26,7 +25,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </main>
       </div>
-      <Footer />
     </div>
   );
 };
