@@ -156,6 +156,32 @@ const SIDEBAR_ITEMS = [
     ]
   },
   {
+    title: 'List Operations',
+    icon: <List size={20} />,
+    children: [
+      {
+        title: 'Ordered List Insert',
+        path: '/algorithms/ordered-list-insert',
+        description: 'Insert a number while keeping the list sorted'
+      },
+      {
+        title: 'Unordered List Insert',
+        path: '/algorithms/unordered-list-insert',
+        description: 'Add a number at the end of the list'
+      },
+      {
+        title: 'Ordered List Search',
+        path: '/algorithms/ordered-list-search',
+        description: 'Find a number using binary search'
+      },
+      {
+        title: 'Unordered List Search',
+        path: '/algorithms/unordered-list-search',
+        description: 'Find a number by checking each element'
+      }
+    ]
+  },
+  {
     title: 'Linked List Operations',
     icon: <List size={20} />,
     children: [

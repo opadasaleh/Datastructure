@@ -9,6 +9,7 @@ import {
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer';
 import LinkedListVisualizer from '../components/visualizations/LinkedListVisualizer';
 import TreeVisualizer from '../components/visualizations/TreeVisualizer';
+import ListVisualizer from '../components/visualizations/ListVisualizer';
 
 // Algorithm descriptions and code samples
 const ALGORITHMS = {
@@ -664,6 +665,143 @@ const ALGORITHMS = {
         description: 'Process the current node.'
       }
     ]
+  },
+  'ordered-list-insert': {
+    title: 'Ordered List Insertion',
+    description: 'Insert a new element into an ordered list while maintaining the sorted order.',
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(1)',
+    type: 'list',
+    code: `public class OrderedList {
+    public static void insert(int[] list, int newValue) {
+        // Find the correct position
+        int pos = 0;
+        while (pos < list.length && list[pos] < newValue) {
+            pos++;
+        }
+        
+        // Shift elements to make space
+        for (int i = list.length - 1; i > pos; i--) {
+            list[i] = list[i - 1];
+        }
+        
+        // Insert the new value
+        list[pos] = newValue;
+    }
+}`,
+    steps: [
+      {
+        title: 'Find Position',
+        description: 'Locate the correct position to maintain order.'
+      },
+      {
+        title: 'Insert Element',
+        description: 'Add the new element at the found position.'
+      },
+      {
+        title: 'Complete Operation',
+        description: 'The list remains sorted after insertion.'
+      }
+    ]
+  },
+  'unordered-list-insert': {
+    title: 'Unordered List Insertion',
+    description: 'Add a new element to the end of an unordered list.',
+    timeComplexity: 'O(1)',
+    spaceComplexity: 'O(1)',
+    type: 'list',
+    code: `public class UnorderedList {
+    public static void insert(int[] list, int newValue) {
+        // Add the new value at the end
+        list[list.length - 1] = newValue;
+    }
+}`,
+    steps: [
+      {
+        title: 'Prepare List',
+        description: 'Get ready to add the new element.'
+      },
+      {
+        title: 'Insert Element',
+        description: 'Add the new element at the end.'
+      },
+      {
+        title: 'Complete Operation',
+        description: 'The new element is added to the list.'
+      }
+    ]
+  },
+  'ordered-list-search': {
+    title: 'Binary Search in Ordered List',
+    description: 'Efficiently find an element in a sorted list using binary search.',
+    timeComplexity: 'O(log n)',
+    spaceComplexity: 'O(1)',
+    type: 'list',
+    code: `public class OrderedList {
+    public static int binarySearch(int[] list, int target) {
+        int left = 0;
+        int right = list.length - 1;
+        
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            
+            if (list[mid] == target) {
+                return mid;
+            } else if (list[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        return -1; // Not found
+    }
+}`,
+    steps: [
+      {
+        title: 'Initialize Search',
+        description: 'Set up the search range.'
+      },
+      {
+        title: 'Binary Search',
+        description: 'Divide and conquer to find the element.'
+      },
+      {
+        title: 'Complete Search',
+        description: 'Element found or search complete.'
+      }
+    ]
+  },
+  'unordered-list-search': {
+    title: 'Linear Search in Unordered List',
+    description: 'Find an element in an unordered list by checking each element.',
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(1)',
+    type: 'list',
+    code: `public class UnorderedList {
+    public static int linearSearch(int[] list, int target) {
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] == target) {
+                return i;
+            }
+        }
+        return -1; // Not found
+    }
+}`,
+    steps: [
+      {
+        title: 'Start Search',
+        description: 'Begin checking elements from the start.'
+      },
+      {
+        title: 'Linear Search',
+        description: 'Check each element one by one.'
+      },
+      {
+        title: 'Complete Search',
+        description: 'Element found or search complete.'
+      }
+    ]
   }
 };
 
@@ -754,6 +892,15 @@ const AlgorithmVisualizer: React.FC = () => {
       case 'tree':
         return (
           <TreeVisualizer
+            operation={id || ''}
+            currentStep={step}
+            onStepsChange={setMaxSteps}
+            speed={speed}
+          />
+        );
+      case 'list':
+        return (
+          <ListVisualizer
             operation={id || ''}
             currentStep={step}
             onStepsChange={setMaxSteps}

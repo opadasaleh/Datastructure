@@ -204,10 +204,75 @@ const LinkedListVisualizer: React.FC<LinkedListVisualizerProps> = ({
 
     return (
         <div className="h-full w-full flex flex-col items-center justify-center p-4">
+            {/* Game-like Header */}
+            <div className="mb-8 text-center">
+                <h3 className="text-2xl font-bold mb-2 text-blue-600">
+                    {operation === 'linked-list-insert' && '🎮 Adding a New Box'}
+                    {operation === 'linked-list-delete' && '🎮 Removing a Box'}
+                    {operation === 'linked-list-search' && '🔍 Finding a Number'}
+                    {operation === 'linked-list-update' && '✏️ Changing a Number'}
+                </h3>
+
+                {/* Simple Story-like Explanation */}
+                <div className="text-lg mb-4">
+                    {operation === 'linked-list-insert' && (
+                        <div className="space-y-2">
+                            <p>🌟 Let's add a new box to our chain!</p>
+                            <p>Step {currentStep + 1}: {
+                                currentStep === 0 ? "Here's our chain of boxes" :
+                                    currentStep === 1 ? "Finding the perfect spot for our new box" :
+                                        currentStep === 2 ? "Creating a shiny new box" :
+                                            currentStep === 3 ? "Connecting our new box to the chain" :
+                                                "✨ All done! Our new box is part of the chain"
+                            }</p>
+                        </div>
+                    )}
+                    {operation === 'linked-list-delete' && (
+                        <div className="space-y-2">
+                            <p>🗑️ Let's remove a box from our chain!</p>
+                            <p>Step {currentStep + 1}: {
+                                currentStep === 0 ? "Here's our chain of boxes" :
+                                    currentStep === 1 ? "Finding the box we want to remove" :
+                                        currentStep === 2 ? "Taking out the box" :
+                                            "✨ All done! The chain is connected again"
+                            }</p>
+                        </div>
+                    )}
+                    {operation === 'linked-list-search' && (
+                        <div className="space-y-2">
+                            <p>🔍 Let's find a number in our chain!</p>
+                            <p>Step {currentStep + 1}: {
+                                currentStep === 0 ? "Starting from the first box" :
+                                    currentStep === 1 ? "Looking through each box" :
+                                        currentStep === 2 ? "🎯 Found it! The number is in this box" :
+                                            "✨ Search complete!"
+                            }</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Simple Color Guide */}
+            <div className="mb-8 flex gap-6 text-lg">
+                <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 border-2 border-blue-500 animate-bounce"></div>
+                    <span>New Box</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 border-2 border-yellow-400"></div>
+                    <span>Looking Here</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 border-2 border-green-500"></div>
+                    <span>Found It!</span>
+                </div>
+            </div>
+
+            {/* The Chain of Boxes */}
             <div className="flex items-center gap-6">
                 {nodes.map((node, index) => (
                     <div key={index} className="relative">
-                        {/* Node */}
+                        {/* Box */}
                         <div
                             className={`
                                 relative flex flex-col items-center
@@ -216,7 +281,7 @@ const LinkedListVisualizer: React.FC<LinkedListVisualizerProps> = ({
                                 ${node.isDeleting ? 'opacity-50 scale-90' : ''}
                             `}
                         >
-                            {/* Node Box */}
+                            {/* Box Design */}
                             <div className={`
                                 flex flex-col
                                 w-24 rounded-md border-2
@@ -227,7 +292,7 @@ const LinkedListVisualizer: React.FC<LinkedListVisualizerProps> = ({
                                 ${node.isNew ? 'animate-bounce border-blue-500' : ''}
                                 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}
                             `}>
-                                {/* Value Section */}
+                                {/* Number Inside Box */}
                                 <div className="p-2 border-b-2 border-dashed border-inherit">
                                     <span className={`
                                         font-mono text-lg
@@ -238,26 +303,33 @@ const LinkedListVisualizer: React.FC<LinkedListVisualizerProps> = ({
                                         {node.value}
                                     </span>
                                 </div>
-                                {/* Next Section */}
-                                <div className="p-2 text-xs text-center text-gray-500">
-                                    next
+                                {/* Next Pointer Section */}
+                                <div className="p-2 text-xs text-center">
+                                    <div className="text-gray-500 mb-1">Points to:</div>
+                                    <div className={`
+                                        px-2 py-1 rounded
+                                        ${node.isPointerActive ? 'bg-yellow-100 text-yellow-800' :
+                                            theme === 'dark' ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}
+                                    `}>
+                                        {node.isTail ? 'Nothing (End)' : 'Next Box →'}
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Head/Tail Labels */}
                             <div className="absolute -top-6 left-0 right-0 text-center">
                                 {node.isHead && (
-                                    <span className="text-xs text-blue-500 font-semibold">Head</span>
+                                    <span className="text-sm text-blue-500 font-semibold">Start Here</span>
                                 )}
                             </div>
                             <div className="absolute -bottom-6 left-0 right-0 text-center">
                                 {node.isTail && (
-                                    <span className="text-xs text-blue-500 font-semibold">Tail</span>
+                                    <span className="text-sm text-blue-500 font-semibold">End Here</span>
                                 )}
                             </div>
                         </div>
 
-                        {/* Pointer Arrow */}
+                        {/* Arrow to Next Box */}
                         {!node.isTail && (
                             <div className={`
                                 absolute top-1/2 -right-6 w-6 h-0.5
@@ -281,15 +353,15 @@ const LinkedListVisualizer: React.FC<LinkedListVisualizerProps> = ({
                                 transition-all duration-200
                                 ${theme === 'dark' ? 'text-gray-600' : 'text-gray-300'}
                             `}>
-                                NULL
+                                The End
                             </div>
                         )}
                     </div>
                 ))}
             </div>
             {nodes.length === 0 && (
-                <div className="text-center text-gray-500">
-                    Empty linked list
+                <div className="text-center text-gray-500 text-lg">
+                    No boxes in the chain yet
                 </div>
             )}
         </div>
