@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useVisualization } from '../../contexts/VisualizationContext';
 
 interface TreeNode {
     value: number;
@@ -17,6 +18,7 @@ interface TreeVisualizerProps {
 }
 
 const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, currentStep, onStepsChange }) => {
+    const { size } = useVisualization();
     const [tree, setTree] = useState<TreeNode | null>(null);
     const [highlightedNode, setHighlightedNode] = useState<number | null>(null);
     const [traversalPath, setTraversalPath] = useState<number[]>([]);
@@ -272,7 +274,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
             {/* Horizontally scrollable tree visualization area */}
             <div className="w-full" style={{ maxWidth: '100vw' }}>
                 <div className="overflow-x-scroll" style={{ maxHeight: 350, minHeight: 200 }}>
-                    <div className="flex justify-center items-start min-w-[800px]">
+                    <div className="flex justify-center items-start min-w-[800px]" style={{ transform: `scale(${size})`, transformOrigin: 'center' }}>
                         {tree && <TreeNode node={tree} level={0} position={0} />}
                     </div>
                 </div>

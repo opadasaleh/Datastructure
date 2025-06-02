@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useVisualization } from '../../contexts/VisualizationContext';
 
 interface ArrayElement {
     value: number;
@@ -23,6 +24,7 @@ const ArrayVisualizer: React.FC<ArrayVisualizerProps> = ({
     speed
 }) => {
     const { theme } = useTheme();
+    const { size } = useVisualization();
     const [elements, setElements] = useState<ArrayElement[]>([]);
     const [operationSteps, setOperationSteps] = useState<ArrayElement[][]>([]);
 
@@ -204,7 +206,7 @@ const ArrayVisualizer: React.FC<ArrayVisualizerProps> = ({
 
     return (
         <div className="h-full w-full flex flex-col items-center justify-center p-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" style={{ transform: `scale(${size})`, transformOrigin: 'center' }}>
                 {elements.map((element, index) => (
                     <div
                         key={index}

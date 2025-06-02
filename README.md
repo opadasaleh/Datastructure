@@ -66,5 +66,7 @@ http://localhost:5173
 - Deletion
 - Search
 - Traversal (Inorder, Preorder, Postorder)
-
+```
+System.out.print 
+```
 
