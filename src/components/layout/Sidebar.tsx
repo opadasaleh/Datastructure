@@ -257,17 +257,9 @@ const Sidebar: React.FC = () => {
     setIsMobileOpen(false);
   }, [location.pathname]);
 
-  // Check if we should show the sidebar based on current route
-  const shouldShowSidebar = location.pathname.startsWith('/algorithms/');
-
   const toggleSidebar = useCallback(() => {
     setIsCollapsed(prev => !prev);
   }, []);
-
-  // Don't render sidebar if we're not on an algorithm page
-  if (!shouldShowSidebar) {
-    return null;
-  }
 
   return (
     <>
