@@ -250,16 +250,24 @@ const Sidebar: React.FC = () => {
   const { theme } = useTheme();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const location = useLocation();
 
   // Close sidebar on mobile when route changes
-  const location = useLocation();
   useEffect(() => {
     setIsMobileOpen(false);
   }, [location.pathname]);
 
+  // Check if we should show the sidebar based on current route
+  const shouldShowSidebar = location.pathname.startsWith('/algorithms/');
+
   const toggleSidebar = useCallback(() => {
     setIsCollapsed(prev => !prev);
   }, []);
+
+  // Don't render sidebar if we're not on an algorithm page
+  if (!shouldShowSidebar) {
+    return null;
+  }
 
   return (
     <>
