@@ -3,9 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   ChevronDown, ChevronRight, ChevronLeft,
   AlignLeft, GitBranch, Network, Database,
-  BarChart2, Binary, Share2, Grid2X2, List, Code, Menu
+  BarChart2, Binary, Share2, Grid2X2, List, Code, Menu, X
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useSidebar } from '../../contexts/SidebarContext';
 
 interface SidebarItemProps {
   title: string;
@@ -248,6 +249,7 @@ const SIDEBAR_ITEMS = [
 // Main Sidebar component
 const Sidebar: React.FC = () => {
   const { theme } = useTheme();
+  const { toggleSidebar } = useSidebar();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
@@ -257,7 +259,7 @@ const Sidebar: React.FC = () => {
     setIsMobileOpen(false);
   }, [location.pathname]);
 
-  const toggleSidebar = useCallback(() => {
+  const toggleCollapse = useCallback(() => {
     setIsCollapsed(prev => !prev);
   }, []);
 
@@ -267,13 +269,27 @@ const Sidebar: React.FC = () => {
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
         className={`
-          fixed top-4 left-4 z-40 lg:hidden
+          fixed top-20 left-4 z-40 lg:hidden
           p-2 rounded-md
           ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}
           shadow-md
         `}
       >
         <Menu size={24} />
+      </button>
+
+      {/* Desktop toggle button */}
+      <button
+        onClick={toggleSidebar}
+        className={`
+          fixed top-20 left-4 z-40 hidden lg:block
+          p-2 rounded-md
+          ${theme === 'dark' ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-100'}
+          shadow-md transition-colors duration-200
+        `}
+        title="Toggle Sidebar"
+      >
+        <Menu size={20} />
       </button>
 
       {/* Mobile sidebar backdrop */}
@@ -289,7 +305,7 @@ const Sidebar: React.FC = () => {
       {/* Sidebar */}
       <div
         className={`
-          fixed top-0 left-0 h-full z-30
+          fixed top-16 left-0 h-[calc(100vh-4rem)] z-30
           transition-all duration-300 ease-in-out
           ${isCollapsed ? 'w-20' : 'w-64'}
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -301,31 +317,54 @@ const Sidebar: React.FC = () => {
         {/* Sidebar content */}
         <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="p-4 flex items-center justify-between">
+          <div className="p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-3">
               <Code size={24} className="text-blue-500" />
               {!isCollapsed && (
-                <span className="text-lg font-semibold">Data Structures</span>
+                <span className="text-lg font-semibold">Navigation</span>
               )}
             </div>
-            <button
-              onClick={() => setIsCollapsed(!isCollapsed)}
-              className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 hidden lg:block"
-            >
-              {isCollapsed ? (
-                <ChevronRight size={20} />
-              ) : (
-                <ChevronLeft size={20} />
-              )}
-            </button>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={toggleCollapse}
+                className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 hidden lg:block"
+                title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              >
+                {isCollapsed ? (
+                  <ChevronRight size={20} />
+                ) : (
+                  <ChevronLeft size={20} />
+                )}
+              </button>
+              <button
+                onClick={() => setIsMobileOpen(false)}
+                className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden"
+              >
+                <X size={20} />
+              </button>
+            </div>
           </div>
 
           {/* Navigation */}
           <div className="flex-1 overflow-y-auto">
             <div className="p-4">
               <nav className="space-y-1">
-                {SIDEBAR_ITEMS.map((item, index) => (
+                {!isCollapsed && SIDEBAR_ITEMS.map((item, index) => (
                   <SidebarItem key={index} {...item} />
+                ))}
+                {isCollapsed && SIDEBAR_ITEMS.map((item, index) => (
+                  <div key={index} className="mb-2">
+                    <div 
+                      className={`
+                        p-3 rounded-md flex justify-center
+                        ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}
+                        transition-colors duration-200
+                      `}
+                      title={item.title}
+                    >
+                      <span className="text-blue-500">{item.icon}</span>
+                    </div>
+                  </div>
                 ))}
               </nav>
             </div>
