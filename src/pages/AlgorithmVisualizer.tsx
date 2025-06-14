@@ -4,7 +4,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import {
   Play, Pause, SkipBack, SkipForward,
   Code, FileText, ChevronRight, ChevronDown,
-  ChevronLeft
+  ChevronLeft, RotateCcw, Settings
 } from 'lucide-react';
 import SizeControl from '../components/controls/SizeControl';
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer';
@@ -1004,6 +1004,9 @@ const AlgorithmVisualizer: React.FC = () => {
   const [step, setStep] = useState(0);
   const [maxSteps, setMaxSteps] = useState(10);
   const [codeOpen, setCodeOpen] = useState(false);
+  const [showControls, setShowControls] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(false);
+  const [loopAnimation, setLoopAnimation] = useState(false);
 
   const algorithm = ALGORITHMS[id as keyof typeof ALGORITHMS];
 
@@ -1021,12 +1024,16 @@ const AlgorithmVisualizer: React.FC = () => {
       if (step < maxSteps - 1) {
         setStep(prevStep => prevStep + 1);
       } else {
-        setPlaying(false);
+        if (loopAnimation) {
+          setStep(0); // Loop back to start
+        } else {
+          setPlaying(false);
+        }
       }
     }, 1000 / speed);
 
     return () => clearTimeout(timer);
-  }, [playing, step, maxSteps, speed]);
+  }, [playing, step, maxSteps, speed, loopAnimation]);
 
   const handlePlayPause = () => {
     setPlaying(!playing);
@@ -1047,6 +1054,11 @@ const AlgorithmVisualizer: React.FC = () => {
     if (step > 0) {
       setStep(prevStep => prevStep - 1);
     }
+  };
+
+  const handleGoToEnd = () => {
+    setStep(maxSteps - 1);
+    setPlaying(false);
   };
 
   if (!algorithm) {
@@ -1178,8 +1190,80 @@ const AlgorithmVisualizer: React.FC = () => {
                   
                   {/* Size Control */}
                   <SizeControl />
+
+                  {/* Advanced Controls Toggle */}
+                  <button
+                    onClick={() => setShowControls(!showControls)}
+                    className={`
+                      p-2 rounded-full transition-colors
+                      ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}
+                    `}
+                    title="Advanced Controls"
+                  >
+                    <Settings size={18} />
+                  </button>
                 </div>
               </div>
+
+              {/* Advanced Controls Panel */}
+              {showControls && (
+                <div className={`
+                  mt-4 p-4 rounded-lg border
+                  ${theme === 'dark' ? 'bg-gray-900 border-gray-600' : 'bg-gray-100 border-gray-300'}
+                `}>
+                  <h3 className="text-sm font-semibold mb-3">Advanced Controls</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Auto Play */}
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="autoPlay"
+                        checked={autoPlay}
+                        onChange={(e) => setAutoPlay(e.target.checked)}
+                        className="rounded"
+                      />
+                      <label htmlFor="autoPlay" className="text-sm">Auto-play on load</label>
+                    </div>
+
+                    {/* Loop Animation */}
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="loopAnimation"
+                        checked={loopAnimation}
+                        onChange={(e) => setLoopAnimation(e.target.checked)}
+                        className="rounded"
+                      />
+                      <label htmlFor="loopAnimation" className="text-sm">Loop animation</label>
+                    </div>
+
+                    {/* Step Slider */}
+                    <div className="sm:col-span-2">
+                      <label className="text-sm font-medium mb-2 block">
+                        Manual Step Control: {step + 1} / {maxSteps}
+                      </label>
+                      <input
+                        type="range"
+                        min="0"
+                        max={maxSteps - 1}
+                        value={step}
+                        onChange={(e) => {
+                          setStep(Number(e.target.value));
+                          setPlaying(false);
+                        }}
+                        className={`
+                          w-full h-2 rounded-lg appearance-none cursor-pointer
+                          ${theme === 'dark'
+                            ? 'bg-gray-700 [&::-webkit-slider-thumb]:bg-green-500 [&::-moz-range-thumb]:bg-green-500'
+                            : 'bg-gray-200 [&::-webkit-slider-thumb]:bg-green-500 [&::-moz-range-thumb]:bg-green-500'}
+                          [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full
+                          [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-none
+                        `}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Visualization Canvas - Much bigger now */}
@@ -1196,6 +1280,20 @@ const AlgorithmVisualizer: React.FC = () => {
               ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}
             `}>
               <div className="flex items-center justify-center space-x-4">
+                {/* Reset Button */}
+                <button
+                  onClick={handleReset}
+                  className={`
+                    p-2 rounded-full transition-colors
+                    ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}
+                    disabled:opacity-50
+                  `}
+                  disabled={step === 0 && !playing}
+                  title="Reset to beginning"
+                >
+                  <RotateCcw size={20} />
+                </button>
+
                 <button
                   onClick={handleReset}
                   className={`
@@ -1242,7 +1340,7 @@ const AlgorithmVisualizer: React.FC = () => {
                   <ChevronRight size={24} />
                 </button>
                 <button
-                  onClick={() => setStep(maxSteps - 1)}
+                  onClick={handleGoToEnd}
                   className={`
                     p-2 rounded-full
                     ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}
@@ -1260,6 +1358,10 @@ const AlgorithmVisualizer: React.FC = () => {
                     className="absolute top-0 left-0 h-2 bg-blue-500 rounded"
                     style={{ width: `${(step / (maxSteps - 1)) * 100}%` }}
                   ></div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>Step {step + 1}</span>
+                  <span>{maxSteps} total</span>
                 </div>
               </div>
             </div>
