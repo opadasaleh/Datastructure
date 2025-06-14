@@ -6,6 +6,7 @@ import {
   Code, FileText, ChevronRight, ChevronDown,
   ChevronLeft
 } from 'lucide-react';
+import SizeControl from '../components/controls/SizeControl';
 import ArrayVisualizer from '../components/visualizations/ArrayVisualizer';
 import LinkedListVisualizer from '../components/visualizations/LinkedListVisualizer';
 import TreeVisualizer from '../components/visualizations/TreeVisualizer';
@@ -972,6 +973,10 @@ const AlgorithmVisualizer: React.FC = () => {
                     />
                     <span className="text-sm min-w-[2.5rem]">{speed}x</span>
                   </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    Size:
+                  </div>
+                  <SizeControl />
                 </div>
               </div>
             </div>
