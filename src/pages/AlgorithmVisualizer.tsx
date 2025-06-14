@@ -1117,7 +1117,7 @@ const AlgorithmVisualizer: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4">
+    <div className="max-w-7xl mx-auto px-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">{algorithm.title}</h1>
         <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -1139,9 +1139,9 @@ const AlgorithmVisualizer: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Visualization Panel */}
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+        {/* Visualization Panel - Now takes 3/4 of the width */}
+        <div className="xl:col-span-3">
           <div className={`
             rounded-lg overflow-hidden border
             ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}
@@ -1182,9 +1182,9 @@ const AlgorithmVisualizer: React.FC = () => {
               </div>
             </div>
 
-            {/* Visualization Canvas */}
+            {/* Visualization Canvas - Much bigger now */}
             <div className={`
-              h-80
+              h-[600px]
               ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}
             `}>
               {renderVisualizer()}
@@ -1266,8 +1266,8 @@ const AlgorithmVisualizer: React.FC = () => {
           </div>
         </div>
 
-        {/* Information Panel */}
-        <div className="lg:col-span-1">
+        {/* Information Panel - Now takes 1/4 of the width */}
+        <div className="xl:col-span-1">
           <div className={`
             rounded-lg border overflow-hidden
             ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}
@@ -1310,7 +1310,7 @@ const AlgorithmVisualizer: React.FC = () => {
 
               {codeOpen && (
                 <div className={`
-                  p-4 font-mono text-sm overflow-x-auto
+                  p-4 font-mono text-xs overflow-x-auto max-h-96 overflow-y-auto
                   ${theme === 'dark' ? 'bg-gray-900 text-gray-300' : 'bg-gray-100 text-gray-800'}
                 `}>
                   <pre>{algorithm.code}</pre>
