@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   ChevronDown, ChevronRight, ChevronLeft,
   AlignLeft, GitBranch, Network, Database,
-  BarChart2, Binary, Share2, Grid2X2, List, Code, Menu, X
+  BarChart2, Binary, Share2, Grid2X2, List, Code, Menu, X, Layers
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -184,7 +184,7 @@ const SIDEBAR_ITEMS = [
   },
   {
     title: 'Linked List Operations',
-    icon: <List size={20} />,
+    icon: <Share2 size={20} />,
     children: [
       {
         title: 'Insertion',
@@ -205,6 +205,37 @@ const SIDEBAR_ITEMS = [
         title: 'Update',
         path: '/algorithms/linkedlist-update',
         description: "Modify a node's value"
+      }
+    ]
+  },
+  {
+    title: 'Queue Operations',
+    icon: <Layers size={20} />,
+    children: [
+      {
+        title: 'Enqueue',
+        path: '/algorithms/queue-enqueue',
+        description: 'Add element to the rear of queue'
+      },
+      {
+        title: 'Dequeue',
+        path: '/algorithms/queue-dequeue',
+        description: 'Remove element from front of queue'
+      },
+      {
+        title: 'Peek',
+        path: '/algorithms/queue-peek',
+        description: 'View front element without removing'
+      },
+      {
+        title: 'Search',
+        path: '/algorithms/queue-search',
+        description: 'Find an element in the queue'
+      },
+      {
+        title: 'Clear',
+        path: '/algorithms/queue-clear',
+        description: 'Remove all elements from queue'
       }
     ]
   },

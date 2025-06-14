@@ -11,6 +11,7 @@ import ArrayVisualizer from '../components/visualizations/ArrayVisualizer';
 import LinkedListVisualizer from '../components/visualizations/LinkedListVisualizer';
 import TreeVisualizer from '../components/visualizations/TreeVisualizer';
 import ListVisualizer from '../components/visualizations/ListVisualizer';
+import QueueVisualizer from '../components/visualizations/QueueVisualizer';
 
 // Algorithm descriptions and code samples
 const ALGORITHMS = {
@@ -367,6 +368,195 @@ const ALGORITHMS = {
       {
         title: 'Complete Operation',
         description: 'The node\'s value has been updated.'
+      }
+    ]
+  },
+  'queue-enqueue': {
+    title: 'Queue Enqueue',
+    description: 'Add a new element to the rear (back) of the queue.',
+    timeComplexity: 'O(1)',
+    spaceComplexity: 'O(1)',
+    type: 'queue',
+    code: `public class Queue {
+    private int[] queue;
+    private int front;
+    private int rear;
+    private int size;
+    private int capacity;
+    
+    public Queue(int capacity) {
+        this.capacity = capacity;
+        this.queue = new int[capacity];
+        this.front = 0;
+        this.rear = -1;
+        this.size = 0;
+    }
+    
+    public boolean enqueue(int element) {
+        if (size == capacity) {
+            return false; // Queue is full
+        }
+        
+        rear = (rear + 1) % capacity;
+        queue[rear] = element;
+        size++;
+        return true;
+    }
+}`,
+    steps: [
+      {
+        title: 'Check Queue',
+        description: 'Verify the queue has space for a new element.'
+      },
+      {
+        title: 'Add to Rear',
+        description: 'Place the new element at the rear of the queue.'
+      },
+      {
+        title: 'Update Pointers',
+        description: 'Update the rear pointer and size counter.'
+      }
+    ]
+  },
+  'queue-dequeue': {
+    title: 'Queue Dequeue',
+    description: 'Remove and return the element from the front of the queue.',
+    timeComplexity: 'O(1)',
+    spaceComplexity: 'O(1)',
+    type: 'queue',
+    code: `public class Queue {
+    private int[] queue;
+    private int front;
+    private int rear;
+    private int size;
+    private int capacity;
+    
+    public int dequeue() {
+        if (size == 0) {
+            throw new RuntimeException("Queue is empty");
+        }
+        
+        int element = queue[front];
+        front = (front + 1) % capacity;
+        size--;
+        return element;
+    }
+}`,
+    steps: [
+      {
+        title: 'Check Queue',
+        description: 'Verify the queue is not empty.'
+      },
+      {
+        title: 'Remove from Front',
+        description: 'Take the element from the front of the queue.'
+      },
+      {
+        title: 'Update Pointers',
+        description: 'Update the front pointer and size counter.'
+      }
+    ]
+  },
+  'queue-peek': {
+    title: 'Queue Peek',
+    description: 'View the front element of the queue without removing it.',
+    timeComplexity: 'O(1)',
+    spaceComplexity: 'O(1)',
+    type: 'queue',
+    code: `public class Queue {
+    private int[] queue;
+    private int front;
+    private int size;
+    
+    public int peek() {
+        if (size == 0) {
+            throw new RuntimeException("Queue is empty");
+        }
+        
+        return queue[front];
+    }
+}`,
+    steps: [
+      {
+        title: 'Check Queue',
+        description: 'Verify the queue is not empty.'
+      },
+      {
+        title: 'View Front',
+        description: 'Look at the front element without removing it.'
+      },
+      {
+        title: 'Return Value',
+        description: 'Return the front element value.'
+      }
+    ]
+  },
+  'queue-search': {
+    title: 'Queue Search',
+    description: 'Search for a specific value in the queue.',
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(1)',
+    type: 'queue',
+    code: `public class Queue {
+    private int[] queue;
+    private int front;
+    private int size;
+    private int capacity;
+    
+    public int search(int target) {
+        for (int i = 0; i < size; i++) {
+            int index = (front + i) % capacity;
+            if (queue[index] == target) {
+                return i; // Position from front
+            }
+        }
+        return -1; // Not found
+    }
+}`,
+    steps: [
+      {
+        title: 'Start Search',
+        description: 'Begin searching from the front of the queue.'
+      },
+      {
+        title: 'Check Elements',
+        description: 'Compare each element with the target value.'
+      },
+      {
+        title: 'Complete Search',
+        description: 'Return position if found, or -1 if not found.'
+      }
+    ]
+  },
+  'queue-clear': {
+    title: 'Queue Clear',
+    description: 'Remove all elements from the queue.',
+    timeComplexity: 'O(1)',
+    spaceComplexity: 'O(1)',
+    type: 'queue',
+    code: `public class Queue {
+    private int front;
+    private int rear;
+    private int size;
+    
+    public void clear() {
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+}`,
+    steps: [
+      {
+        title: 'Reset Pointers',
+        description: 'Reset front and rear pointers to initial state.'
+      },
+      {
+        title: 'Clear Size',
+        description: 'Set the size counter to zero.'
+      },
+      {
+        title: 'Complete Clear',
+        description: 'The queue is now empty and ready for new elements.'
       }
     ]
   },
@@ -902,6 +1092,15 @@ const AlgorithmVisualizer: React.FC = () => {
       case 'list':
         return (
           <ListVisualizer
+            operation={id || ''}
+            currentStep={step}
+            onStepsChange={setMaxSteps}
+            speed={speed}
+          />
+        );
+      case 'queue':
+        return (
+          <QueueVisualizer
             operation={id || ''}
             currentStep={step}
             onStepsChange={setMaxSteps}
