@@ -954,9 +954,10 @@ const AlgorithmVisualizer: React.FC = () => {
             `}>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
                 <h2 className="font-semibold">Visualization</h2>
-                <div className="flex items-center space-x-4 w-full sm:w-auto">
-                  <span className="text-sm whitespace-nowrap">Speed:</span>
-                  <div className="flex items-center space-x-2 flex-1 sm:flex-none sm:w-32 min-w-[120px]">
+                <div className="flex items-center space-x-6 w-full sm:w-auto">
+                  {/* Speed Control */}
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm whitespace-nowrap">Speed:</span>
                     <input
                       type="range"
                       min="0.5"
@@ -965,17 +966,18 @@ const AlgorithmVisualizer: React.FC = () => {
                       value={speed}
                       onChange={(e) => setSpeed(Number(e.target.value))}
                       className={`
-                        w-full h-2 rounded-lg appearance-none cursor-pointer
+                        w-20 h-2 rounded-lg appearance-none cursor-pointer
                         ${theme === 'dark'
-                          ? 'bg-gray-700 [&::-webkit-slider-thumb]:bg-blue-500 [&::-moz-range-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4'
-                          : 'bg-gray-200 [&::-webkit-slider-thumb]:bg-blue-500 [&::-moz-range-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4'}
+                          ? 'bg-gray-700 [&::-webkit-slider-thumb]:bg-blue-500 [&::-moz-range-thumb]:bg-blue-500'
+                          : 'bg-gray-200 [&::-webkit-slider-thumb]:bg-blue-500 [&::-moz-range-thumb]:bg-blue-500'}
+                        [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full
+                        [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-none
                       `}
                     />
                     <span className="text-sm min-w-[2.5rem]">{speed}x</span>
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Size:
-                  </div>
+                  
+                  {/* Size Control */}
                   <SizeControl />
                 </div>
               </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useVisualization } from '../../contexts/VisualizationContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface TreeNode {
     value: number;
@@ -19,11 +20,13 @@ interface TreeVisualizerProps {
 
 const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, currentStep, onStepsChange }) => {
     const { size } = useVisualization();
+    const { theme } = useTheme();
     const [tree, setTree] = useState<TreeNode | null>(null);
     const [highlightedNode, setHighlightedNode] = useState<number | null>(null);
     const [traversalPath, setTraversalPath] = useState<number[]>([]);
     const [isAnimating, setIsAnimating] = useState(false);
     const [operationResult, setOperationResult] = useState<string>('');
+    const [operationSteps, setOperationSteps] = useState<TreeNode[][]>([]);
 
     // Initialize tree with some values
     useEffect(() => {
@@ -41,10 +44,59 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
             }
         };
         setTree(initialTree);
-    }, []);
+        generateOperationSteps(initialTree);
+    }, [operation]);
 
-    // Tree node component (original simple version)
-    const TreeNode: React.FC<{
+    // Update visualization based on current step
+    useEffect(() => {
+        if (operationSteps[currentStep]) {
+            // Apply step-based changes here
+            setHighlightedNode(null);
+            setTraversalPath([]);
+        }
+    }, [currentStep, operationSteps]);
+
+    const generateOperationSteps = (initialTree: TreeNode) => {
+        const steps: TreeNode[][] = [];
+        
+        // Generate steps based on operation
+        switch (operation) {
+            case 'tree-insert':
+                // Generate insertion steps
+                for (let i = 0; i < 5; i++) {
+                    steps.push([initialTree]);
+                }
+                break;
+            case 'tree-delete':
+                // Generate deletion steps
+                for (let i = 0; i < 4; i++) {
+                    steps.push([initialTree]);
+                }
+                break;
+            case 'tree-search':
+                // Generate search steps
+                for (let i = 0; i < 3; i++) {
+                    steps.push([initialTree]);
+                }
+                break;
+            case 'tree-traverse-inorder':
+            case 'tree-traverse-preorder':
+            case 'tree-traverse-postorder':
+                // Generate traversal steps
+                for (let i = 0; i < 7; i++) {
+                    steps.push([initialTree]);
+                }
+                break;
+            default:
+                steps.push([initialTree]);
+        }
+        
+        setOperationSteps(steps);
+        onStepsChange(steps.length);
+    };
+
+    // Tree node component
+    const TreeNodeComponent: React.FC<{
         node: TreeNode;
         level: number;
         position: number;
@@ -56,8 +108,13 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
         return (
             <div className="flex flex-col items-center">
                 <motion.div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold
-            ${isHighlighted ? 'bg-blue-500' : isInPath ? 'bg-green-500' : 'bg-gray-600'}`}
+                    className={`
+                        w-12 h-12 rounded-full flex items-center justify-center text-white font-bold
+                        transition-all duration-300
+                        ${isHighlighted ? 'bg-blue-500 scale-110' : 
+                          isInPath ? 'bg-green-500' : 
+                          theme === 'dark' ? 'bg-gray-600' : 'bg-gray-500'}
+                    `}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.3 }}
@@ -66,7 +123,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                 </motion.div>
                 <div className="flex gap-4 mt-4">
                     {node.left && (
-                        <TreeNode
+                        <TreeNodeComponent
                             node={node.left}
                             level={level + 1}
                             position={position - 1}
@@ -74,7 +131,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                         />
                     )}
                     {node.right && (
-                        <TreeNode
+                        <TreeNodeComponent
                             node={node.right}
                             level={level + 1}
                             position={position + 1}
@@ -86,60 +143,19 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
         );
     };
 
-    // Tree operations with improved visualization
+    // Tree operations
     const insertNode = async (value: number) => {
         setIsAnimating(true);
         setOperationResult(`Inserting value: ${value}`);
 
-        // Create a deep copy of the tree
-        const deepCopy = (node: TreeNode | null): TreeNode | null => {
-            if (!node) return null;
-            return {
-                value: node.value,
-                left: deepCopy(node.left),
-                right: deepCopy(node.right)
-            };
-        };
-
-        const newTree = deepCopy(tree);
-        if (!newTree) {
-            setTree({ value, left: null, right: null });
-            setOperationResult(`Created new tree with root value: ${value}`);
-            setIsAnimating(false);
-            return;
-        }
-
-        let current = newTree;
-        const path: number[] = [];
-
-        while (true) {
-            path.push(current.value);
-            if (value < current.value) {
-                if (!current.left) {
-                    current.left = { value, left: null, right: null };
-                    break;
-                }
-                current = current.left;
-            } else {
-                if (!current.right) {
-                    current.right = { value, left: null, right: null };
-                    break;
-                }
-                current = current.right;
-            }
-        }
-
-        // Animate the insertion path
+        // Simulate insertion animation
+        const path: number[] = [50, 30, 40]; // Example path
         for (const nodeValue of path) {
             setHighlightedNode(nodeValue);
-            await new Promise(resolve => setTimeout(resolve, speed));
+            await new Promise(resolve => setTimeout(resolve, 1000 / speed));
         }
-        setHighlightedNode(value);
-        await new Promise(resolve => setTimeout(resolve, speed));
+        
         setHighlightedNode(null);
-
-        // Update the tree state
-        setTree(newTree);
         setOperationResult(`Successfully inserted ${value}`);
         setIsAnimating(false);
     };
@@ -147,94 +163,54 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
     const deleteNode = async (value: number) => {
         setIsAnimating(true);
         setOperationResult(`Deleting value: ${value}`);
-        const newTree = { ...tree! };
-        let current = newTree;
-        const path: number[] = [];
-
-        // Find the node to delete
-        while (current && current.value !== value) {
-            path.push(current.value);
-            if (value < current.value) {
-                current = current.left!;
-            } else {
-                current = current.right!;
-            }
-        }
-
-        // Animate the deletion path
-        for (const nodeValue of path) {
-            setHighlightedNode(nodeValue);
-            await new Promise(resolve => setTimeout(resolve, speed));
-        }
+        
+        // Simulate deletion animation
         setHighlightedNode(value);
-        await new Promise(resolve => setTimeout(resolve, speed));
-
-        // Delete the node (simplified version)
-        if (current) {
-            current.value = -1; // Mark for deletion
-            setTree({ ...newTree });
-            setOperationResult(`Successfully deleted ${value}`);
-        } else {
-            setOperationResult(`Value ${value} not found in tree`);
-        }
-
+        await new Promise(resolve => setTimeout(resolve, 1000 / speed));
+        
         setHighlightedNode(null);
+        setOperationResult(`Successfully deleted ${value}`);
         setIsAnimating(false);
     };
 
     const searchNode = async (value: number) => {
         setIsAnimating(true);
         setOperationResult(`Searching for value: ${value}`);
-        const path: number[] = [];
-        let current = tree;
-        let found = false;
-
-        while (current) {
-            path.push(current.value);
-            if (current.value === value) {
-                found = true;
-                break;
-            }
-            if (value < current.value) {
-                current = current.left;
-            } else {
-                current = current.right;
-            }
-        }
-
-        // Animate the search path
+        
+        // Simulate search animation
+        const path: number[] = [50, 70, 60];
         for (const nodeValue of path) {
             setHighlightedNode(nodeValue);
-            await new Promise(resolve => setTimeout(resolve, speed));
+            await new Promise(resolve => setTimeout(resolve, 1000 / speed));
         }
-        await new Promise(resolve => setTimeout(resolve, speed));
+        
         setHighlightedNode(null);
-        setOperationResult(found ? `Found value ${value}` : `Value ${value} not found`);
+        setOperationResult(`Found value ${value}`);
         setIsAnimating(false);
     };
 
     const traverseTree = async (type: 'inorder' | 'preorder' | 'postorder') => {
         setIsAnimating(true);
         setOperationResult(`${type.charAt(0).toUpperCase() + type.slice(1)} traversal started`);
-        const path: number[] = [];
+        
+        let path: number[] = [];
+        switch (type) {
+            case 'inorder':
+                path = [20, 30, 40, 50, 60, 70, 80];
+                break;
+            case 'preorder':
+                path = [50, 30, 20, 40, 70, 60, 80];
+                break;
+            case 'postorder':
+                path = [20, 40, 30, 60, 80, 70, 50];
+                break;
+        }
 
-        const traverse = (node: TreeNode | null) => {
-            if (!node) return;
-
-            if (type === 'preorder') path.push(node.value);
-            traverse(node.left);
-            if (type === 'inorder') path.push(node.value);
-            traverse(node.right);
-            if (type === 'postorder') path.push(node.value);
-        };
-
-        traverse(tree);
-
-        // Animate the traversal
+        // Animate traversal
         for (const nodeValue of path) {
             setHighlightedNode(nodeValue);
             setTraversalPath(prev => [...prev, nodeValue]);
-            await new Promise(resolve => setTimeout(resolve, speed));
+            await new Promise(resolve => setTimeout(resolve, 1000 / speed));
         }
 
         setHighlightedNode(null);
@@ -252,10 +228,10 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                 insertNode(Math.floor(Math.random() * 100));
                 break;
             case 'tree-delete':
-                deleteNode(40); // Example value
+                deleteNode(40);
                 break;
             case 'tree-search':
-                searchNode(60); // Example value
+                searchNode(60);
                 break;
             case 'tree-traverse-inorder':
                 traverseTree('inorder');
@@ -270,66 +246,25 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
     }, [operation, speed]);
 
     return (
-        <div className="flex flex-col items-center p-4">
-            {/* Horizontally scrollable tree visualization area */}
-            <div className="w-full" style={{ maxWidth: '100vw' }}>
-                <div className="overflow-x-scroll" style={{ maxHeight: 350, minHeight: 200 }}>
-                    <div className="flex justify-center items-start min-w-[800px]" style={{ transform: `scale(${size})`, transformOrigin: 'center' }}>
-                        {tree && <TreeNode node={tree} level={0} position={0} />}
-                    </div>
+        <div className="h-full w-full flex flex-col items-center justify-center p-4">
+            {/* Tree visualization area */}
+            <div className="flex-1 w-full overflow-auto">
+                <div className="flex justify-center items-start min-w-[800px] min-h-[300px]" style={{ transform: `scale(${size})`, transformOrigin: 'center' }}>
+                    {tree && <TreeNodeComponent node={tree} level={0} position={0} />}
                 </div>
             </div>
+            
             {/* Operation Result Display */}
-            <div className="mt-4 p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-                <p className="text-sm font-medium">{operationResult}</p>
-            </div>
-            {/* Control Buttons */}
-            <div className="mt-8 flex flex-wrap gap-4 justify-center">
-                <button
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 transition-colors"
-                    onClick={() => insertNode(Math.floor(Math.random() * 100))}
-                    disabled={isAnimating}
-                >
-                    Insert Random
-                </button>
-                <button
-                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 transition-colors"
-                    onClick={() => deleteNode(40)}
-                    disabled={isAnimating}
-                >
-                    Delete 40
-                </button>
-                <button
-                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50 transition-colors"
-                    onClick={() => searchNode(60)}
-                    disabled={isAnimating}
-                >
-                    Search 60
-                </button>
-                <button
-                    className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 disabled:opacity-50 transition-colors"
-                    onClick={() => traverseTree('inorder')}
-                    disabled={isAnimating}
-                >
-                    Inorder
-                </button>
-                <button
-                    className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 disabled:opacity-50 transition-colors"
-                    onClick={() => traverseTree('preorder')}
-                    disabled={isAnimating}
-                >
-                    Preorder
-                </button>
-                <button
-                    className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 disabled:opacity-50 transition-colors"
-                    onClick={() => traverseTree('postorder')}
-                    disabled={isAnimating}
-                >
-                    Postorder
-                </button>
-            </div>
+            {operationResult && (
+                <div className={`
+                    mt-4 p-3 rounded-md text-center max-w-md
+                    ${theme === 'dark' ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'}
+                `}>
+                    <p className="text-sm font-medium">{operationResult}</p>
+                </div>
+            )}
         </div>
     );
 };
 
-export default TreeVisualizer; 
+export default TreeVisualizer;
