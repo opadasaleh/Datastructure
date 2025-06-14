@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Sun, Moon, Search } from 'lucide-react';
+import { Menu, X, Sun, Moon, Search, RotateCw } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useSidebar } from '../../contexts/SidebarContext';
+import { useLocation } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
+  const { toggleSidebar } = useSidebar();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  const shouldShowSidebarToggle = location.pathname.startsWith('/algorithms/');
 
   return (
     <nav className={`
@@ -28,6 +34,19 @@ const Navbar: React.FC = () => {
             <Link to="/quiz" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-100 dark:hover:bg-gray-700 transition">
               Quizzes
             </Link>
+            
+            {/* Sidebar Toggle for Algorithm Pages */}
+            {shouldShowSidebarToggle && (
+              <button
+                onClick={toggleSidebar}
+                className="p-2 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition flex items-center space-x-1"
+                title="Toggle Traditional Sidebar"
+              >
+                <Menu size={20} />
+                <span className="text-sm">Menu</span>
+              </button>
+            )}
+            
             <button
               className="p-2 rounded-full hover:bg-blue-100 dark:hover:bg-gray-700 transition"
               onClick={() => setSearchOpen(!searchOpen)}
@@ -59,19 +78,26 @@ const Navbar: React.FC = () => {
         <div className={`md:hidden ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}>
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
-              to="/structures"
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-100 dark:hover:bg-gray-700"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Data Structures
-            </Link>
-            <Link
               to="/quiz"
               className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-100 dark:hover:bg-gray-700"
               onClick={() => setMobileMenuOpen(false)}
             >
               Quizzes
             </Link>
+            
+            {shouldShowSidebarToggle && (
+              <button
+                className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium hover:bg-blue-100 dark:hover:bg-gray-700"
+                onClick={() => {
+                  toggleSidebar();
+                  setMobileMenuOpen(false);
+                }}
+              >
+                <Menu size={18} className="mr-2" />
+                Toggle Sidebar
+              </button>
+            )}
+            
             <button
               className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium hover:bg-blue-100 dark:hover:bg-gray-700"
               onClick={() => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
+import CircularSidebar from './CircularSidebar';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useSidebar } from '../../contexts/SidebarContext';
 import { useLocation } from 'react-router-dom';
@@ -25,7 +26,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     `}>
       <Navbar />
       <div className="flex-1 flex">
+        {/* Traditional Sidebar - Hidden by default, can be toggled */}
         {shouldShowSidebar && isSidebarVisible && <Sidebar />}
+        
+        {/* Circular Rotatable Sidebar - Always available on algorithm pages */}
+        {shouldShowSidebar && <CircularSidebar isVisible={true} />}
+        
         <main className={`
           flex-1 overflow-y-auto p-4 md:p-8 lg:p-12
           transition-all duration-300
