@@ -30,8 +30,7 @@ const ArrayVisualizer: React.FC<ArrayVisualizerProps> = ({
 
     // Initialize array on mount
     useEffect(() => {
-        console.log('Operation:', operation); // Debug log
-        const initialSize = 8;
+        const initialSize = 6;
         const newElements: ArrayElement[] = Array.from({ length: initialSize }, (_, index) => ({
             value: (index + 1) * 10,
             isActive: false,
@@ -54,39 +53,26 @@ const ArrayVisualizer: React.FC<ArrayVisualizerProps> = ({
         const steps: ArrayElement[][] = [initialArray];
         const array = [...initialArray];
 
-        // First step: Show initial array
         steps.push(JSON.parse(JSON.stringify(array)));
 
         switch (operation) {
             case 'array-insert': {
-                // Insert element at index 3
-                const newValue = 45;
-                const insertIndex = 3;
+                const newValue = 35;
+                const insertIndex = 2;
 
-                // Create a new array with one more element
-                const newArray = [...array, { value: 0, isActive: false, isHighlighted: false, isNew: false, isDeleting: false }];
+                // Highlight insertion point
+                array[insertIndex].isHighlighted = true;
+                steps.push(JSON.parse(JSON.stringify(array)));
 
-                // Highlight the insertion point
-                const highlightStep = newArray.map((el, idx) => ({
-                    ...el,
-                    isHighlighted: idx === insertIndex
-                }));
-                steps.push(JSON.parse(JSON.stringify(highlightStep)));
-
-                // Show elements shifting right
-                for (let i = newArray.length - 2; i >= insertIndex; i--) {
-                    newArray[i + 1] = { ...newArray[i], isHighlighted: true };
-                    steps.push(JSON.parse(JSON.stringify(newArray)));
-                }
-
-                // Show the new element appearing
-                newArray[insertIndex] = {
+                // Create new array with inserted element
+                const newArray = [...array];
+                newArray.splice(insertIndex, 0, {
                     value: newValue,
                     isActive: false,
                     isHighlighted: false,
                     isNew: true,
                     isDeleting: false
-                };
+                });
                 steps.push(JSON.parse(JSON.stringify(newArray)));
 
                 // Reset states
@@ -99,150 +85,115 @@ const ArrayVisualizer: React.FC<ArrayVisualizerProps> = ({
             }
 
             case 'array-delete': {
-                // Delete element at index 2
                 const deleteIndex = 2;
 
-                // Highlight the element to delete
-                const highlightStep = array.map((el, idx) => ({
-                    ...el,
-                    isHighlighted: idx === deleteIndex
-                }));
-                steps.push(JSON.parse(JSON.stringify(highlightStep)));
+                // Highlight element to delete
+                array[deleteIndex].isHighlighted = true;
+                steps.push(JSON.parse(JSON.stringify(array)));
 
-                // Show the element being deleted
+                // Mark as deleting
                 array[deleteIndex].isDeleting = true;
                 steps.push(JSON.parse(JSON.stringify(array)));
 
-                // Show elements shifting left
-                for (let i = deleteIndex; i < array.length - 1; i++) {
-                    array[i] = { ...array[i + 1], isHighlighted: true };
-                    steps.push(JSON.parse(JSON.stringify(array)));
-                }
-
-                // Remove the last element
-                array.pop();
-                steps.push(JSON.parse(JSON.stringify(array)));
-
-                // Reset highlights
-                array.forEach(el => el.isHighlighted = false);
+                // Remove element
+                array.splice(deleteIndex, 1);
                 steps.push(JSON.parse(JSON.stringify(array)));
                 break;
             }
 
             case 'array-search': {
-                // Search for value 40
-                const searchValue = 40;
+                const searchValue = 30;
 
-                // Sequential search visualization
                 for (let i = 0; i < array.length; i++) {
-                    // Highlight current element being checked
                     array.forEach((el, idx) => {
                         el.isHighlighted = idx === i;
-                        el.isActive = idx < i && el.value !== searchValue;
+                        el.isActive = idx < i;
                     });
                     steps.push(JSON.parse(JSON.stringify(array)));
 
                     if (array[i].value === searchValue) {
-                        // Found the element
                         array[i].isActive = true;
                         array[i].isHighlighted = false;
                         steps.push(JSON.parse(JSON.stringify(array)));
                         break;
                     }
                 }
-
-                // If not found, show all elements as checked
-                if (!array.some(el => el.isActive)) {
-                    array.forEach(el => {
-                        el.isHighlighted = false;
-                        el.isActive = true;
-                    });
-                    steps.push(JSON.parse(JSON.stringify(array)));
-                }
                 break;
             }
 
             case 'array-update': {
-                // Update element at index 4
-                const updateIndex = 4;
+                const updateIndex = 3;
                 const newValue = 75;
 
-                // Highlight the element to update
-                const highlightStep = array.map((el, idx) => ({
-                    ...el,
-                    isHighlighted: idx === updateIndex
-                }));
-                steps.push(JSON.parse(JSON.stringify(highlightStep)));
-
-                // Show old value fading
-                array[updateIndex].isDeleting = true;
+                // Highlight element to update
+                array[updateIndex].isHighlighted = true;
                 steps.push(JSON.parse(JSON.stringify(array)));
 
-                // Update the value and show it as new
-                array[updateIndex] = {
-                    value: newValue,
-                    isActive: false,
-                    isHighlighted: false,
-                    isNew: true,
-                    isDeleting: false
-                };
+                // Update value
+                array[updateIndex].value = newValue;
+                array[updateIndex].isNew = true;
+                array[updateIndex].isHighlighted = false;
                 steps.push(JSON.parse(JSON.stringify(array)));
 
-                // Reset states
+                // Reset
                 array[updateIndex].isNew = false;
                 steps.push(JSON.parse(JSON.stringify(array)));
                 break;
             }
-
-            default:
-                console.warn('Unknown operation:', operation);
-                break;
         }
 
-        console.log('Generated steps:', steps.length); // Debug log
         setOperationSteps(steps);
         onStepsChange(steps.length);
     };
 
     return (
-        <div className="h-full w-full flex flex-col items-center justify-center p-4">
-            <div className="flex items-center gap-2" style={{ transform: `scale(${size})`, transformOrigin: 'center' }}>
+        <div className="h-full w-full flex flex-col items-center justify-center p-8">
+            {/* Simple title */}
+            <h3 className="text-xl font-bold mb-8 text-center">
+                {operation === 'array-insert' && 'Adding Element'}
+                {operation === 'array-delete' && 'Removing Element'}
+                {operation === 'array-search' && 'Finding Element'}
+                {operation === 'array-update' && 'Updating Element'}
+            </h3>
+
+            {/* Array visualization */}
+            <div className="flex items-center gap-1" style={{ transform: `scale(${size})` }}>
                 {elements.map((element, index) => (
                     <div
                         key={index}
                         className={`
                             relative flex items-center justify-center
-                            w-12 h-12 rounded-lg border-2 
-                            transition-all duration-200 transform
-                            ${element.isHighlighted ? 'ring-2 ring-yellow-400 scale-110' : ''}
-                            ${element.isActive ? 'border-green-500' :
-                                theme === 'dark' ? 'border-gray-600' : 'border-gray-300'}
-                            ${element.isNew ? 'animate-bounce border-blue-500' : ''}
+                            w-16 h-16 border-2 font-bold text-lg
+                            transition-all duration-300
+                            ${element.isHighlighted ? 'border-yellow-400 bg-yellow-100 dark:bg-yellow-900' : ''}
+                            ${element.isActive ? 'border-green-400 bg-green-100 dark:bg-green-900' : ''}
+                            ${element.isNew ? 'border-blue-400 bg-blue-100 dark:bg-blue-900 animate-pulse' : ''}
                             ${element.isDeleting ? 'opacity-50 scale-90' : ''}
-                            ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}
+                            ${!element.isHighlighted && !element.isActive && !element.isNew ? 
+                                (theme === 'dark' ? 'border-gray-600 bg-gray-800' : 'border-gray-300 bg-white') : ''}
                         `}
                     >
-                        <span className={`
-                            font-mono text-lg
-                            ${element.isNew ? 'text-blue-500 font-bold' : ''}
-                            ${element.isActive ? 'text-green-500' : ''}
-                            ${theme === 'dark' ? 'text-white' : 'text-gray-900'}
-                        `}>
-                            {element.value}
-                        </span>
-                        <div className="absolute -top-6 left-0 right-0 text-center">
-                            <span className="text-xs text-gray-500">{index}</span>
+                        {element.value}
+                        <div className="absolute -bottom-6 text-xs text-gray-500">
+                            {index}
                         </div>
                     </div>
                 ))}
             </div>
-            {elements.length === 0 && (
-                <div className="text-center text-gray-500">
-                    No elements to display
-                </div>
-            )}
+
+            {/* Simple status */}
+            <div className="mt-8 text-center">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Step {currentStep + 1}: {
+                        currentStep === 0 ? 'Starting...' :
+                        currentStep === 1 ? 'Processing...' :
+                        currentStep === 2 ? 'Almost done...' :
+                        'Complete!'
+                    }
+                </p>
+            </div>
         </div>
     );
 };
 
-export default ArrayVisualizer; 
+export default ArrayVisualizer;
