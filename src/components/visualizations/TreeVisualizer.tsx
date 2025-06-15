@@ -94,43 +94,61 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     type: 'start',
                     message: 'Starting insertion of value 45',
                     highlightedNodes: [],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 steps.push({
                     type: 'compare',
                     message: 'Compare 45 with root (50). 45 < 50, go left',
                     highlightedNodes: [50],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 steps.push({
                     type: 'compare',
                     message: 'Compare 45 with 30. 45 > 30, go right',
                     highlightedNodes: [30],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 steps.push({
                     type: 'compare',
                     message: 'Compare 45 with 40. 45 > 40, go right',
                     highlightedNodes: [40],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
+
+                // Create the final tree with the new node properly connected
+                const finalTree = JSON.parse(JSON.stringify(initialTree));
+                if (finalTree.left?.right) {
+                    finalTree.left.right.right = {
+                        value: 45,
+                        x: 400,
+                        y: 350,
+                        left: null,
+                        right: null,
+                        isNew: true
+                    };
+                }
 
                 steps.push({
                     type: 'insert',
                     message: 'Found empty spot! Insert 45 as right child of 40',
                     highlightedNodes: [45],
-                    newNode: { value: 45, x: 400, y: 350 },
-                    tree: initialTree
+                    tree: finalTree
                 });
+
+                // Final step with new node integrated
+                const completedTree = JSON.parse(JSON.stringify(finalTree));
+                if (completedTree.left?.right?.right) {
+                    completedTree.left.right.right.isNew = false;
+                }
 
                 steps.push({
                     type: 'complete',
                     message: '✅ Successfully inserted 45 into the tree!',
                     highlightedNodes: [],
-                    tree: initialTree
+                    tree: completedTree
                 });
                 break;
             }
@@ -140,36 +158,42 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     type: 'start',
                     message: 'Starting deletion of value 30',
                     highlightedNodes: [],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 steps.push({
                     type: 'find',
                     message: 'Found node 30 to delete',
                     highlightedNodes: [30],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 steps.push({
                     type: 'analyze',
                     message: 'Node 30 has two children. Need to find replacement',
                     highlightedNodes: [30, 20, 40],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
+
+                // Create tree with 30 replaced by 40
+                const deletedTree = JSON.parse(JSON.stringify(initialTree));
+                if (deletedTree.left) {
+                    deletedTree.left.value = 40;
+                    deletedTree.left.right = null; // Remove the original 40 node
+                }
 
                 steps.push({
                     type: 'replace',
                     message: 'Replace 30 with its successor (40)',
                     highlightedNodes: [40],
-                    deletingNode: 30,
-                    tree: initialTree
+                    tree: deletedTree
                 });
 
                 steps.push({
                     type: 'complete',
                     message: '✅ Successfully deleted 30 from the tree!',
                     highlightedNodes: [],
-                    tree: initialTree
+                    tree: deletedTree
                 });
                 break;
             }
@@ -180,21 +204,21 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     type: 'start',
                     message: 'Starting search for value 60',
                     highlightedNodes: [],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 steps.push({
                     type: 'compare',
                     message: 'Compare 60 with root (50). 60 > 50, go right',
                     highlightedNodes: [50],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 steps.push({
                     type: 'compare',
                     message: 'Compare 60 with 70. 60 < 70, go left',
                     highlightedNodes: [70],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 steps.push({
@@ -202,14 +226,14 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     message: '🎯 Found it! Value 60 is in the tree',
                     highlightedNodes: [60],
                     foundNode: 60,
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 steps.push({
                     type: 'complete',
                     message: '✅ Search completed successfully!',
                     highlightedNodes: [],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
                 break;
             }
@@ -220,7 +244,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     message: 'Starting Inorder Traversal (Left → Root → Right)',
                     highlightedNodes: [],
                     traversalOrder: [],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 const inorderPath = [20, 30, 40, 50, 60, 70, 80];
@@ -230,7 +254,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                         message: `Visit node ${value} (${index + 1}/${inorderPath.length})`,
                         highlightedNodes: [value],
                         traversalOrder: inorderPath.slice(0, index + 1),
-                        tree: initialTree
+                        tree: JSON.parse(JSON.stringify(initialTree))
                     });
                 });
 
@@ -239,7 +263,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     message: '✅ Inorder traversal complete! Order: 20, 30, 40, 50, 60, 70, 80',
                     highlightedNodes: [],
                     traversalOrder: inorderPath,
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
                 break;
             }
@@ -250,7 +274,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     message: 'Starting Preorder Traversal (Root → Left → Right)',
                     highlightedNodes: [],
                     traversalOrder: [],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 const preorderPath = [50, 30, 20, 40, 70, 60, 80];
@@ -260,7 +284,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                         message: `Visit node ${value} (${index + 1}/${preorderPath.length})`,
                         highlightedNodes: [value],
                         traversalOrder: preorderPath.slice(0, index + 1),
-                        tree: initialTree
+                        tree: JSON.parse(JSON.stringify(initialTree))
                     });
                 });
 
@@ -269,7 +293,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     message: '✅ Preorder traversal complete! Order: 50, 30, 20, 40, 70, 60, 80',
                     highlightedNodes: [],
                     traversalOrder: preorderPath,
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
                 break;
             }
@@ -280,7 +304,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     message: 'Starting Postorder Traversal (Left → Right → Root)',
                     highlightedNodes: [],
                     traversalOrder: [],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
 
                 const postorderPath = [20, 40, 30, 60, 80, 70, 50];
@@ -290,7 +314,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                         message: `Visit node ${value} (${index + 1}/${postorderPath.length})`,
                         highlightedNodes: [value],
                         traversalOrder: postorderPath.slice(0, index + 1),
-                        tree: initialTree
+                        tree: JSON.parse(JSON.stringify(initialTree))
                     });
                 });
 
@@ -299,7 +323,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     message: '✅ Postorder traversal complete! Order: 20, 40, 30, 60, 80, 70, 50',
                     highlightedNodes: [],
                     traversalOrder: postorderPath,
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
                 break;
             }
@@ -309,7 +333,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                     type: 'start',
                     message: 'Tree visualization ready',
                     highlightedNodes: [],
-                    tree: initialTree
+                    tree: JSON.parse(JSON.stringify(initialTree))
                 });
         }
         
@@ -324,7 +348,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
         if (parentX !== undefined && parentY !== undefined && node.x && node.y) {
             connections.push(
                 <line
-                    key={`line-${node.value}`}
+                    key={`line-${node.value}-${parentX}-${parentY}`}
                     x1={parentX}
                     y1={parentY + 25}
                     x2={node.x}
@@ -350,8 +374,6 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
         const nodes = [];
         const isHighlighted = currentStepData?.highlightedNodes?.includes(node.value);
         const isInTraversal = currentStepData?.traversalOrder?.includes(node.value);
-        const isNewNode = currentStepData?.newNode?.value === node.value;
-        const isDeleting = currentStepData?.deletingNode === node.value;
         const isFound = currentStepData?.foundNode === node.value;
 
         if (node.x && node.y) {
@@ -364,8 +386,8 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                         r="25"
                         fill={
                             isFound ? '#10B981' :
-                            isNewNode ? '#3B82F6' :
-                            isDeleting ? '#EF4444' :
+                            node.isNew ? '#3B82F6' :
+                            node.isDeleting ? '#EF4444' :
                             isHighlighted ? '#F59E0B' :
                             isInTraversal ? '#8B5CF6' :
                             theme === 'dark' ? '#374151' : '#F3F4F6'
@@ -373,11 +395,12 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                         stroke={
                             isHighlighted ? '#F59E0B' :
                             isFound ? '#10B981' :
+                            node.isNew ? '#3B82F6' :
                             theme === 'dark' ? '#6B7280' : '#9CA3AF'
                         }
                         strokeWidth="2"
                         className={`transition-all duration-300 ${
-                            isHighlighted || isFound || isNewNode ? 'animate-pulse' : ''
+                            isHighlighted || isFound || node.isNew ? 'animate-pulse' : ''
                         }`}
                     />
                     
@@ -387,7 +410,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                         y={node.y + 30}
                         textAnchor="middle"
                         className={`text-lg font-bold ${
-                            isFound || isNewNode || isDeleting || isHighlighted ? 'fill-white' :
+                            isFound || node.isNew || node.isDeleting || isHighlighted ? 'fill-white' :
                             theme === 'dark' ? 'fill-white' : 'fill-gray-900'
                         }`}
                     >
@@ -416,33 +439,12 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
             nodes.push(...renderNodes(node.right));
         }
 
-        // Add new node if being inserted
-        if (currentStepData?.newNode && currentStepData.newNode.value !== node.value) {
-            const newNode = currentStepData.newNode;
-            nodes.push(
-                <g key={`new-node-${newNode.value}`}>
-                    <circle
-                        cx={newNode.x}
-                        cy={newNode.y + 25}
-                        r="25"
-                        fill="#3B82F6"
-                        stroke="#1D4ED8"
-                        strokeWidth="2"
-                        className="animate-bounce"
-                    />
-                    <text
-                        x={newNode.x}
-                        y={newNode.y + 30}
-                        textAnchor="middle"
-                        className="text-lg font-bold fill-white"
-                    >
-                        {newNode.value}
-                    </text>
-                </g>
-            );
-        }
-
         return nodes;
+    };
+
+    // Get the current tree state
+    const getCurrentTree = () => {
+        return currentStepData?.tree || tree;
     };
 
     return (
@@ -498,10 +500,10 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, speed, curre
                 >
                     <svg width="800" height="400" className="w-full h-full">
                         {/* Render connections first (behind nodes) */}
-                        {tree && renderConnections(tree)}
+                        {getCurrentTree() && renderConnections(getCurrentTree())}
                         
                         {/* Render nodes */}
-                        {tree && renderNodes(tree)}
+                        {getCurrentTree() && renderNodes(getCurrentTree())}
 
                         {/* Direction labels */}
                         <text x="100" y="30" className="text-sm fill-gray-500 font-semibold">
