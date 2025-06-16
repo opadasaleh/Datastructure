@@ -274,6 +274,32 @@ const SIDEBAR_ITEMS = [
         description: 'Traverse tree in Left -> Right -> Root order'
       }
     ]
+  },
+  {
+    title: 'Composite Structures',
+    icon: <Database size={20} />,
+    children: [
+      {
+        title: 'Stack using Array',
+        path: '/algorithms/stack-using-array',
+        description: 'Build a stack using array as storage'
+      },
+      {
+        title: 'Queue using Array',
+        path: '/algorithms/queue-using-array',
+        description: 'Build a queue using array with pointers'
+      },
+      {
+        title: 'Graph using Matrix',
+        path: '/algorithms/graph-using-array',
+        description: 'Represent graph with 2D array'
+      },
+      {
+        title: 'Hash Table using Array',
+        path: '/algorithms/hash-table-using-array',
+        description: 'Build hash table with array and hash function'
+      }
+    ]
   }
 ];
 

@@ -1,7 +1,7 @@
 import React, { useState, useCallback, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  AlignLeft, GitBranch, List, Layers, Share2, Code, X
+  AlignLeft, GitBranch, List, Layers, Share2, Code, X, Database
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -72,6 +72,17 @@ const CircularSidebar: React.FC<CircularSidebarProps> = ({ isVisible }) => {
         { title: 'Preorder', path: '/algorithms/tree-traverse-preorder' },
         { title: 'Postorder', path: '/algorithms/tree-traverse-postorder' }
       ]
+    },
+    {
+      title: 'Composite',
+      icon: <Database size={20} />,
+      color: '#EC4899',
+      children: [
+        { title: 'Stack using Array', path: '/algorithms/stack-using-array' },
+        { title: 'Queue using Array', path: '/algorithms/queue-using-array' },
+        { title: 'Graph using Matrix', path: '/algorithms/graph-using-array' },
+        { title: 'Hash Table using Array', path: '/algorithms/hash-table-using-array' }
+      ]
     }
   ];
 
@@ -103,7 +114,7 @@ const CircularSidebar: React.FC<CircularSidebarProps> = ({ isVisible }) => {
 
         {/* Category Buttons Around Circle */}
         {SIDEBAR_ITEMS.map((item, index) => {
-          const angle = (index * 72) - 90; // 360/5 = 72 degrees apart, start from top
+          const angle = (index * 60) - 90; // 360/6 = 60 degrees apart, start from top
           const radian = (angle * Math.PI) / 180;
           const radius = 45;
           const x = Math.cos(radian) * radius;

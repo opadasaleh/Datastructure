@@ -12,6 +12,7 @@ import LinkedListVisualizer from '../components/visualizations/LinkedListVisuali
 import TreeVisualizer from '../components/visualizations/TreeVisualizer';
 import ListVisualizer from '../components/visualizations/ListVisualizer';
 import QueueVisualizer from '../components/visualizations/QueueVisualizer';
+import CompositeStructureVisualizer from '../components/visualizations/CompositeStructureVisualizer';
 
 // Algorithm descriptions and code samples
 const ALGORITHMS = {
@@ -993,6 +994,208 @@ const ALGORITHMS = {
         description: 'Element found or search complete.'
       }
     ]
+  },
+  // New composite structure algorithms
+  'stack-using-array': {
+    title: 'Stack Implementation using Array',
+    description: 'Build a Stack data structure using an Array as the underlying storage mechanism.',
+    timeComplexity: 'O(1) for push/pop',
+    spaceComplexity: 'O(n)',
+    type: 'composite',
+    code: `public class ArrayStack {
+    private int[] array;
+    private int top;
+    private int capacity;
+    
+    public ArrayStack(int capacity) {
+        this.capacity = capacity;
+        this.array = new int[capacity];
+        this.top = -1;
+    }
+    
+    public void push(int element) {
+        if (top >= capacity - 1) {
+            throw new RuntimeException("Stack overflow");
+        }
+        array[++top] = element;
+    }
+    
+    public int pop() {
+        if (top < 0) {
+            throw new RuntimeException("Stack underflow");
+        }
+        return array[top--];
+    }
+    
+    public int peek() {
+        if (top < 0) {
+            throw new RuntimeException("Stack is empty");
+        }
+        return array[top];
+    }
+}`,
+    steps: [
+      {
+        title: 'Initialize Stack',
+        description: 'Create an array and set top pointer to -1.'
+      },
+      {
+        title: 'Push Operations',
+        description: 'Add elements by incrementing top and storing values.'
+      },
+      {
+        title: 'Pop Operations',
+        description: 'Remove elements by returning top value and decrementing.'
+      }
+    ]
+  },
+  'queue-using-array': {
+    title: 'Queue Implementation using Array',
+    description: 'Build a Queue data structure using an Array with front and rear pointers.',
+    timeComplexity: 'O(1) for enqueue/dequeue',
+    spaceComplexity: 'O(n)',
+    type: 'composite',
+    code: `public class ArrayQueue {
+    private int[] array;
+    private int front;
+    private int rear;
+    private int size;
+    private int capacity;
+    
+    public ArrayQueue(int capacity) {
+        this.capacity = capacity;
+        this.array = new int[capacity];
+        this.front = 0;
+        this.rear = -1;
+        this.size = 0;
+    }
+    
+    public void enqueue(int element) {
+        if (size >= capacity) {
+            throw new RuntimeException("Queue is full");
+        }
+        rear = (rear + 1) % capacity;
+        array[rear] = element;
+        size++;
+    }
+    
+    public int dequeue() {
+        if (size <= 0) {
+            throw new RuntimeException("Queue is empty");
+        }
+        int element = array[front];
+        front = (front + 1) % capacity;
+        size--;
+        return element;
+    }
+}`,
+    steps: [
+      {
+        title: 'Initialize Queue',
+        description: 'Create array with front and rear pointers.'
+      },
+      {
+        title: 'Enqueue Operations',
+        description: 'Add elements at rear position.'
+      },
+      {
+        title: 'Dequeue Operations',
+        description: 'Remove elements from front position.'
+      }
+    ]
+  },
+  'graph-using-array': {
+    title: 'Graph using Adjacency Matrix',
+    description: 'Represent a graph using a 2D array (adjacency matrix) to store connections.',
+    timeComplexity: 'O(1) for edge operations',
+    spaceComplexity: 'O(V²)',
+    type: 'composite',
+    code: `public class GraphMatrix {
+    private int[][] matrix;
+    private int vertices;
+    
+    public GraphMatrix(int vertices) {
+        this.vertices = vertices;
+        this.matrix = new int[vertices][vertices];
+    }
+    
+    public void addEdge(int source, int destination) {
+        matrix[source][destination] = 1;
+        matrix[destination][source] = 1; // For undirected graph
+    }
+    
+    public void removeEdge(int source, int destination) {
+        matrix[source][destination] = 0;
+        matrix[destination][source] = 0;
+    }
+    
+    public boolean hasEdge(int source, int destination) {
+        return matrix[source][destination] == 1;
+    }
+}`,
+    steps: [
+      {
+        title: 'Initialize Matrix',
+        description: 'Create a 2D array filled with zeros.'
+      },
+      {
+        title: 'Add Edges',
+        description: 'Set matrix[i][j] = 1 to represent edge between vertices i and j.'
+      },
+      {
+        title: 'Query Graph',
+        description: 'Check matrix values to determine if edges exist.'
+      }
+    ]
+  },
+  'hash-table-using-array': {
+    title: 'Hash Table using Array',
+    description: 'Implement a hash table using an array and a hash function for fast key-value storage.',
+    timeComplexity: 'O(1) average for operations',
+    spaceComplexity: 'O(n)',
+    type: 'composite',
+    code: `public class HashTable {
+    private String[] array;
+    private int capacity;
+    
+    public HashTable(int capacity) {
+        this.capacity = capacity;
+        this.array = new String[capacity];
+    }
+    
+    private int hash(String key) {
+        return Math.abs(key.hashCode()) % capacity;
+    }
+    
+    public void put(String key, String value) {
+        int index = hash(key);
+        array[index] = value;
+    }
+    
+    public String get(String key) {
+        int index = hash(key);
+        return array[index];
+    }
+    
+    public void remove(String key) {
+        int index = hash(key);
+        array[index] = null;
+    }
+}`,
+    steps: [
+      {
+        title: 'Initialize Array',
+        description: 'Create an array to store values.'
+      },
+      {
+        title: 'Hash Function',
+        description: 'Use hash function to map keys to array indices.'
+      },
+      {
+        title: 'Store/Retrieve',
+        description: 'Use computed index to store and retrieve values.'
+      }
+    ]
   }
 };
 
@@ -1113,6 +1316,15 @@ const AlgorithmVisualizer: React.FC = () => {
       case 'queue':
         return (
           <QueueVisualizer
+            operation={id || ''}
+            currentStep={step}
+            onStepsChange={setMaxSteps}
+            speed={speed}
+          />
+        );
+      case 'composite':
+        return (
+          <CompositeStructureVisualizer
             operation={id || ''}
             currentStep={step}
             onStepsChange={setMaxSteps}
