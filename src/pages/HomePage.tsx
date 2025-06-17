@@ -11,16 +11,8 @@ import {
   Layers,
   Database,
   Zap,
-  Target,
-  Shuffle,
-  BarChart3,
-  Network,
-  Hash,
-  TreePine,
-  Grid3X3,
-  Cpu,
-  Brain,
-  Gauge
+  Gauge,
+  Share2
 } from 'lucide-react';
 import { motion } from '../utils/motionHelpers';
 
@@ -41,7 +33,7 @@ const HomePage: React.FC = () => {
     },
     {
       title: 'Hash Table',
-      icon: <Hash size={24} />,
+      icon: <Database size={24} />,
       description: 'Fast key-value storage using hash functions for O(1) average access time.',
       path: '/algorithms/hash-table-using-array',
       features: [
@@ -65,129 +57,78 @@ const HomePage: React.FC = () => {
 
   const categories = [
     {
-      title: 'Linear Data Structures',
+      title: 'Array Operations',
       icon: <AlignLeft size={24} />,
-      description: 'Master fundamental linear data structures with step-by-step visualizations.',
+      description: 'Learn and visualize array operations including insertion, deletion, search, and updates.',
       color: 'from-blue-500 to-cyan-500',
       items: [
-        { title: 'Array Operations', path: '/algorithms/array-insert', description: 'Insert, delete, search, and update elements' },
-        { title: 'Dynamic Arrays', path: '/algorithms/dynamic-array', description: 'Resizable arrays with automatic growth' },
-        { title: 'Linked Lists', path: '/algorithms/linkedlist-insert', description: 'Singly and doubly linked list operations' },
-        { title: 'Circular Lists', path: '/algorithms/circular-list', description: 'Lists where last node points to first' },
-        { title: 'Stack Operations', path: '/algorithms/stack-using-array', description: 'LIFO operations: push, pop, peek' },
-        { title: 'Queue Operations', path: '/algorithms/queue-enqueue', description: 'FIFO operations: enqueue, dequeue' }
+        { title: 'Array Insertion', path: '/algorithms/array-insert', description: 'Insert elements at any position in the array' },
+        { title: 'Array Deletion', path: '/algorithms/array-delete', description: 'Remove elements from any position in the array' },
+        { title: 'Array Search', path: '/algorithms/array-search', description: 'Find elements in the array using linear search' },
+        { title: 'Array Update', path: '/algorithms/array-update', description: 'Modify elements at any position in the array' }
       ]
     },
     {
-      title: 'Tree & Hierarchical Structures',
-      icon: <TreePine size={24} />,
-      description: 'Explore tree-based data structures and their powerful applications.',
+      title: 'List Operations',
+      icon: <List size={24} />,
+      description: 'Explore ordered and unordered list operations with different search strategies.',
       color: 'from-green-500 to-emerald-500',
       items: [
-        { title: 'Binary Trees', path: '/algorithms/tree-insert', description: 'Basic tree operations and traversals' },
-        { title: 'Binary Search Trees', path: '/algorithms/bst-operations', description: 'Efficient searching in sorted trees' },
-        { title: 'AVL Trees', path: '/algorithms/avl-tree', description: 'Self-balancing binary search trees' },
-        { title: 'Red-Black Trees', path: '/algorithms/red-black-tree', description: 'Balanced trees with color properties' },
-        { title: 'Heap Operations', path: '/algorithms/heap-operations', description: 'Priority queues and heap sort' },
-        { title: 'Trie (Prefix Tree)', path: '/algorithms/trie-operations', description: 'String searching and autocomplete' }
+        { title: 'Ordered List Insert', path: '/algorithms/ordered-list-insert', description: 'Insert a number while keeping the list sorted' },
+        { title: 'Unordered List Insert', path: '/algorithms/unordered-list-insert', description: 'Add a number at the end of the list' },
+        { title: 'Ordered List Search', path: '/algorithms/ordered-list-search', description: 'Find a number using binary search' },
+        { title: 'Unordered List Search', path: '/algorithms/unordered-list-search', description: 'Find a number by checking each element' }
       ]
     },
     {
-      title: 'Graph Algorithms',
-      icon: <Network size={24} />,
-      description: 'Understand graph theory and network algorithms with interactive demos.',
+      title: 'Linked List Operations',
+      icon: <Share2 size={24} />,
+      description: 'Master linked list operations with interactive node-by-node visualizations.',
       color: 'from-purple-500 to-violet-500',
       items: [
-        { title: 'Graph Representation', path: '/algorithms/graph-using-array', description: 'Adjacency matrix and list representations' },
-        { title: 'Breadth-First Search', path: '/algorithms/bfs-traversal', description: 'Level-by-level graph exploration' },
-        { title: 'Depth-First Search', path: '/algorithms/dfs-traversal', description: 'Deep exploration of graph paths' },
-        { title: 'Dijkstra\'s Algorithm', path: '/algorithms/dijkstra', description: 'Shortest path in weighted graphs' },
-        { title: 'Minimum Spanning Tree', path: '/algorithms/mst-kruskal', description: 'Connect all vertices with minimum cost' },
-        { title: 'Topological Sort', path: '/algorithms/topological-sort', description: 'Ordering vertices in directed graphs' }
+        { title: 'Linked List Insert', path: '/algorithms/linkedlist-insert', description: 'Insert a new node into the linked list' },
+        { title: 'Linked List Delete', path: '/algorithms/linkedlist-delete', description: 'Remove a node from the linked list' },
+        { title: 'Linked List Search', path: '/algorithms/linkedlist-search', description: 'Find a value in the linked list' },
+        { title: 'Linked List Update', path: '/algorithms/linkedlist-update', description: "Modify a node's value in the list" }
       ]
     },
     {
-      title: 'Hash-Based Structures',
-      icon: <Hash size={24} />,
-      description: 'Fast data access using hashing techniques and collision resolution.',
+      title: 'Queue Operations',
+      icon: <Layers size={24} />,
+      description: 'Understand FIFO (First In, First Out) operations with queue visualizations.',
       color: 'from-orange-500 to-red-500',
       items: [
-        { title: 'Hash Tables', path: '/algorithms/hash-table-using-array', description: 'Key-value storage with hash functions' },
-        { title: 'Collision Resolution', path: '/algorithms/hash-collision', description: 'Chaining and open addressing methods' },
-        { title: 'Bloom Filters', path: '/algorithms/bloom-filter', description: 'Probabilistic membership testing' },
-        { title: 'Consistent Hashing', path: '/algorithms/consistent-hashing', description: 'Distributed system load balancing' },
-        { title: 'Hash Sets', path: '/algorithms/hash-set', description: 'Unique element storage and operations' },
-        { title: 'Hash Maps', path: '/algorithms/hash-map', description: 'Advanced key-value mapping techniques' }
+        { title: 'Queue Enqueue', path: '/algorithms/queue-enqueue', description: 'Add element to the rear of queue' },
+        { title: 'Queue Dequeue', path: '/algorithms/queue-dequeue', description: 'Remove element from front of queue' },
+        { title: 'Queue Peek', path: '/algorithms/queue-peek', description: 'View front element without removing' },
+        { title: 'Queue Search', path: '/algorithms/queue-search', description: 'Find an element in the queue' },
+        { title: 'Queue Clear', path: '/algorithms/queue-clear', description: 'Remove all elements from queue' }
       ]
     },
     {
-      title: 'Sorting & Searching',
-      icon: <BarChart3 size={24} />,
-      description: 'Master essential algorithms for organizing and finding data efficiently.',
+      title: 'Tree Operations',
+      icon: <GitBranch size={24} />,
+      description: 'Master tree data structure operations with step-by-step visualizations.',
       color: 'from-pink-500 to-rose-500',
       items: [
-        { title: 'Bubble Sort', path: '/algorithms/bubble-sort', description: 'Simple comparison-based sorting' },
-        { title: 'Quick Sort', path: '/algorithms/quick-sort', description: 'Efficient divide-and-conquer sorting' },
-        { title: 'Merge Sort', path: '/algorithms/merge-sort', description: 'Stable divide-and-conquer sorting' },
-        { title: 'Heap Sort', path: '/algorithms/heap-sort', description: 'In-place sorting using heap structure' },
-        { title: 'Binary Search', path: '/algorithms/ordered-list-search', description: 'Efficient searching in sorted arrays' },
-        { title: 'Interpolation Search', path: '/algorithms/interpolation-search', description: 'Improved binary search for uniform data' }
+        { title: 'Tree Insertion', path: '/algorithms/tree-insert', description: 'Insert a new node into the binary search tree' },
+        { title: 'Tree Deletion', path: '/algorithms/tree-delete', description: 'Remove a node from the binary search tree' },
+        { title: 'Tree Search', path: '/algorithms/tree-search', description: 'Find a value in the binary search tree' },
+        { title: 'Inorder Traversal', path: '/algorithms/tree-traverse-inorder', description: 'Traverse tree in Left → Root → Right order' },
+        { title: 'Preorder Traversal', path: '/algorithms/tree-traverse-preorder', description: 'Traverse tree in Root → Left → Right order' },
+        { title: 'Postorder Traversal', path: '/algorithms/tree-traverse-postorder', description: 'Traverse tree in Left → Right → Root order' }
       ]
     },
     {
-      title: 'Advanced Data Structures',
-      icon: <Cpu size={24} />,
-      description: 'Explore sophisticated structures for specialized use cases.',
+      title: 'Composite Structures',
+      icon: <Database size={24} />,
+      description: 'Learn how to build complex data structures using simpler ones as building blocks.',
       color: 'from-indigo-500 to-blue-500',
       items: [
-        { title: 'Segment Trees', path: '/algorithms/segment-tree', description: 'Range queries and updates' },
-        { title: 'Fenwick Tree (BIT)', path: '/algorithms/fenwick-tree', description: 'Efficient prefix sum calculations' },
-        { title: 'Disjoint Set Union', path: '/algorithms/union-find', description: 'Track connected components' },
-        { title: 'B-Trees', path: '/algorithms/b-tree', description: 'Self-balancing trees for databases' },
-        { title: 'Skip Lists', path: '/algorithms/skip-list', description: 'Probabilistic alternative to balanced trees' },
-        { title: 'Suffix Arrays', path: '/algorithms/suffix-array', description: 'String processing and pattern matching' }
-      ]
-    },
-    {
-      title: 'Dynamic Programming',
-      icon: <Brain size={24} />,
-      description: 'Solve complex problems by breaking them into simpler subproblems.',
-      color: 'from-teal-500 to-cyan-500',
-      items: [
-        { title: 'Fibonacci Sequence', path: '/algorithms/fibonacci-dp', description: 'Classic DP introduction with memoization' },
-        { title: 'Longest Common Subsequence', path: '/algorithms/lcs-dp', description: 'String comparison and similarity' },
-        { title: 'Knapsack Problem', path: '/algorithms/knapsack-dp', description: 'Optimization with weight constraints' },
-        { title: 'Edit Distance', path: '/algorithms/edit-distance', description: 'Minimum operations to transform strings' },
-        { title: 'Coin Change', path: '/algorithms/coin-change', description: 'Minimum coins for target amount' },
-        { title: 'Matrix Chain Multiplication', path: '/algorithms/matrix-chain', description: 'Optimal parenthesization' }
-      ]
-    },
-    {
-      title: 'String Algorithms',
-      icon: <Grid3X3 size={24} />,
-      description: 'Efficient algorithms for text processing and pattern matching.',
-      color: 'from-yellow-500 to-orange-500',
-      items: [
-        { title: 'KMP Pattern Matching', path: '/algorithms/kmp-search', description: 'Efficient string pattern searching' },
-        { title: 'Rabin-Karp Algorithm', path: '/algorithms/rabin-karp', description: 'Rolling hash pattern matching' },
-        { title: 'Z Algorithm', path: '/algorithms/z-algorithm', description: 'Linear time pattern matching' },
-        { title: 'Manacher\'s Algorithm', path: '/algorithms/manacher', description: 'Find all palindromes in linear time' },
-        { title: 'Suffix Tree', path: '/algorithms/suffix-tree', description: 'Compressed trie for all suffixes' },
-        { title: 'Aho-Corasick', path: '/algorithms/aho-corasick', description: 'Multiple pattern matching' }
-      ]
-    },
-    {
-      title: 'Geometric Algorithms',
-      icon: <Target size={24} />,
-      description: 'Computational geometry and spatial data structures.',
-      color: 'from-emerald-500 to-teal-500',
-      items: [
-        { title: 'Convex Hull', path: '/algorithms/convex-hull', description: 'Find smallest convex polygon' },
-        { title: 'Line Intersection', path: '/algorithms/line-intersection', description: 'Detect intersecting line segments' },
-        { title: 'Closest Pair of Points', path: '/algorithms/closest-pair', description: 'Find nearest points efficiently' },
-        { title: 'Voronoi Diagrams', path: '/algorithms/voronoi', description: 'Partition plane into regions' },
-        { title: 'Range Trees', path: '/algorithms/range-tree', description: 'Multi-dimensional range queries' },
-        { title: 'KD-Trees', path: '/algorithms/kd-tree', description: 'Space partitioning for nearest neighbor' }
+        { title: 'Stack using Array', path: '/algorithms/stack-using-array', description: 'Build a stack using array as underlying storage' },
+        { title: 'Queue using Array', path: '/algorithms/queue-using-array', description: 'Build a queue using array with pointers' },
+        { title: 'Graph using Matrix', path: '/algorithms/graph-using-array', description: 'Represent graph with 2D adjacency matrix' },
+        { title: 'Hash Table using Array', path: '/algorithms/hash-table-using-array', description: 'Build hash table with array and hash function' }
       ]
     }
   ];
@@ -220,15 +161,15 @@ const HomePage: React.FC = () => {
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-8">
           <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} shadow`}>
-            <div className="text-2xl font-bold text-blue-500">50+</div>
+            <div className="text-2xl font-bold text-blue-500">25+</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Algorithms</div>
           </div>
           <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} shadow`}>
-            <div className="text-2xl font-bold text-green-500">15+</div>
+            <div className="text-2xl font-bold text-green-500">8</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Data Structures</div>
           </div>
           <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} shadow`}>
-            <div className="text-2xl font-bold text-purple-500">9</div>
+            <div className="text-2xl font-bold text-purple-500">6</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Categories</div>
           </div>
           <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} shadow`}>
@@ -305,7 +246,7 @@ const HomePage: React.FC = () => {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">Explore Operations</h2>
           <p className={`text-lg max-w-3xl mx-auto ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-            Dive deep into comprehensive algorithm categories, from basic data structures to advanced computational techniques.
+            Master fundamental data structures and algorithms through interactive visualizations and step-by-step explanations.
           </p>
         </div>
         
@@ -338,7 +279,7 @@ const HomePage: React.FC = () => {
 
               {/* Operations List */}
               <div className="p-4">
-                <div className="space-y-2 max-h-64 overflow-y-auto">
+                <div className="space-y-2">
                   {category.items.map((item, itemIndex) => (
                     <Link
                       key={itemIndex}
