@@ -865,26 +865,36 @@ const ALGORITHMS = {
     spaceComplexity: 'O(1)',
     type: 'list',
     code: `public class OrderedList {
-    public static void insert(int[] list, int newValue) {
-        // Find the correct position
-        int pos = 0;
-        while (pos < list.length && list[pos] < newValue) {
-            pos++;
+    public static int[] insert(int[] list, int newValue) {
+        // Find the correct position to maintain order
+        int position = 0;
+        while (position < list.length && list[position] < newValue) {
+            position++;
         }
         
-        // Shift elements to make space
-        for (int i = list.length - 1; i > pos; i--) {
-            list[i] = list[i - 1];
+        // Create new array with extra space
+        int[] newList = new int[list.length + 1];
+        
+        // Copy elements before insertion point
+        for (int i = 0; i < position; i++) {
+            newList[i] = list[i];
         }
         
         // Insert the new value
-        list[pos] = newValue;
+        newList[position] = newValue;
+        
+        // Copy remaining elements
+        for (int i = position; i < list.length; i++) {
+            newList[i + 1] = list[i];
+        }
+        
+        return newList;
     }
 }`,
     steps: [
       {
         title: 'Find Position',
-        description: 'Locate the correct position to maintain order.'
+        description: 'Locate the correct position to maintain sorted order.'
       },
       {
         title: 'Insert Element',
@@ -903,9 +913,19 @@ const ALGORITHMS = {
     spaceComplexity: 'O(1)',
     type: 'list',
     code: `public class UnorderedList {
-    public static void insert(int[] list, int newValue) {
+    public static int[] insert(int[] list, int newValue) {
+        // Create new array with extra space
+        int[] newList = new int[list.length + 1];
+        
+        // Copy all existing elements
+        for (int i = 0; i < list.length; i++) {
+            newList[i] = list[i];
+        }
+        
         // Add the new value at the end
-        list[list.length - 1] = newValue;
+        newList[list.length] = newValue;
+        
+        return newList;
     }
 }`,
     steps: [
@@ -935,14 +955,14 @@ const ALGORITHMS = {
         int right = list.length - 1;
         
         while (left <= right) {
-            int mid = (left + right) / 2;
+            int mid = left + (right - left) / 2;
             
             if (list[mid] == target) {
-                return mid;
+                return mid; // Found at index mid
             } else if (list[mid] < target) {
-                left = mid + 1;
+                left = mid + 1; // Search right half
             } else {
-                right = mid - 1;
+                right = mid - 1; // Search left half
             }
         }
         
@@ -952,11 +972,11 @@ const ALGORITHMS = {
     steps: [
       {
         title: 'Initialize Search',
-        description: 'Set up the search range.'
+        description: 'Set up the search range and strategy.'
       },
       {
         title: 'Binary Search',
-        description: 'Divide and conquer to find the element.'
+        description: 'Divide and conquer to find the element efficiently.'
       },
       {
         title: 'Complete Search',
@@ -966,15 +986,16 @@ const ALGORITHMS = {
   },
   'unordered-list-search': {
     title: 'Linear Search in Unordered List',
-    description: 'Find an element in an unordered list by checking each element.',
+    description: 'Find an element in an unordered list by checking each element sequentially.',
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(1)',
     type: 'list',
     code: `public class UnorderedList {
     public static int linearSearch(int[] list, int target) {
+        // Check each element sequentially
         for (int i = 0; i < list.length; i++) {
             if (list[i] == target) {
-                return i;
+                return i; // Found at index i
             }
         }
         return -1; // Not found
