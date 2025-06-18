@@ -595,5 +595,3 @@ const QueueVisualizer: React.FC<QueueVisualizerProps> = ({
 };
 
 export default QueueVisualizer;
-
-export default QueueVisualizer
