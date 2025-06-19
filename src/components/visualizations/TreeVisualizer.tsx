@@ -27,17 +27,17 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, values }) =>
         
         switch (operation) {
             case 'insert':
-                values.forEach(value => {
+                (values || []).forEach(value => {
                     steps.push(`Inserting ${value} into the tree`);
                 });
                 break;
             case 'delete':
-                values.forEach(value => {
+                (values || []).forEach(value => {
                     steps.push(`Deleting ${value} from the tree`);
                 });
                 break;
             case 'search':
-                values.forEach(value => {
+                (values || []).forEach(value => {
                     steps.push(`Searching for ${value} in the tree`);
                 });
                 break;
@@ -55,7 +55,7 @@ const TreeVisualizer: React.FC<TreeVisualizerProps> = ({ operation, values }) =>
                 
                 <div className="mb-4">
                     <p className="text-lg font-semibold">Operation: {operation}</p>
-                    <p className="text-md">Values: {values.join(', ')}</p>
+                    <p className="text-md">Values: {(values || []).join(', ')}</p>
                 </div>
 
                 <div className="border-2 border-gray-300 rounded-lg p-4 min-h-64 flex items-center justify-center">
