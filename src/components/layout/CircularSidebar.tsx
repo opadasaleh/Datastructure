@@ -1,7 +1,7 @@
 import React, { useState, useCallback, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  AlignLeft, GitBranch, List, Layers, Share2, Code, X, Database
+  AlignLeft, GitBranch, List, Layers, Share2, Code, X, Database, BarChart2
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -49,9 +49,21 @@ const CircularSidebar: React.FC<CircularSidebarProps> = ({ isVisible }) => {
       ]
     },
     {
+      title: 'Stacks',
+      icon: <BarChart2 size={20} />,
+      color: '#F59E0B',
+      children: [
+        { title: 'Push', path: '/algorithms/stack-push' },
+        { title: 'Pop', path: '/algorithms/stack-pop' },
+        { title: 'Peek', path: '/algorithms/stack-peek' },
+        { title: 'Search', path: '/algorithms/stack-search' },
+        { title: 'Clear', path: '/algorithms/stack-clear' }
+      ]
+    },
+    {
       title: 'Queues',
       icon: <Layers size={20} />,
-      color: '#F59E0B',
+      color: '#EF4444',
       children: [
         { title: 'Enqueue', path: '/algorithms/queue-enqueue' },
         { title: 'Dequeue', path: '/algorithms/queue-dequeue' },
@@ -63,7 +75,7 @@ const CircularSidebar: React.FC<CircularSidebarProps> = ({ isVisible }) => {
     {
       title: 'Trees',
       icon: <GitBranch size={20} />,
-      color: '#EF4444',
+      color: '#EC4899',
       children: [
         { title: 'Insert', path: '/algorithms/tree-insert' },
         { title: 'Delete', path: '/algorithms/tree-delete' },
@@ -76,7 +88,7 @@ const CircularSidebar: React.FC<CircularSidebarProps> = ({ isVisible }) => {
     {
       title: 'Composite',
       icon: <Database size={20} />,
-      color: '#EC4899',
+      color: '#6366F1',
       children: [
         { title: 'Stack using Array', path: '/algorithms/stack-using-array' },
         { title: 'Queue using Array', path: '/algorithms/queue-using-array' },
@@ -114,7 +126,7 @@ const CircularSidebar: React.FC<CircularSidebarProps> = ({ isVisible }) => {
 
         {/* Category Buttons Around Circle */}
         {SIDEBAR_ITEMS.map((item, index) => {
-          const angle = (index * 60) - 90; // 360/6 = 60 degrees apart, start from top
+          const angle = (index * (360 / SIDEBAR_ITEMS.length)) - 90; // Distribute evenly around circle
           const radian = (angle * Math.PI) / 180;
           const radius = 45;
           const x = Math.cos(radian) * radius;

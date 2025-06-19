@@ -209,6 +209,37 @@ const SIDEBAR_ITEMS = [
     ]
   },
   {
+    title: 'Stack Operations',
+    icon: <BarChart2 size={20} />,
+    children: [
+      {
+        title: 'Push',
+        path: '/algorithms/stack-push',
+        description: 'Add element to top of stack'
+      },
+      {
+        title: 'Pop',
+        path: '/algorithms/stack-pop',
+        description: 'Remove element from top of stack'
+      },
+      {
+        title: 'Peek',
+        path: '/algorithms/stack-peek',
+        description: 'View top element without removing'
+      },
+      {
+        title: 'Search',
+        path: '/algorithms/stack-search',
+        description: 'Find an element in the stack'
+      },
+      {
+        title: 'Clear',
+        path: '/algorithms/stack-clear',
+        description: 'Remove all elements from stack'
+      }
+    ]
+  },
+  {
     title: 'Queue Operations',
     icon: <Layers size={20} />,
     children: [
