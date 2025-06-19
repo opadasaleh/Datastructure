@@ -562,7 +562,7 @@ const ALGORITHMS = {
     ]
   },
   'tree-insert': {
-    title: 'Tree Insertion',
+    title: 'Binary Search Tree Insertion',
     description: 'Insert a new node into a binary search tree while maintaining the BST property.',
     timeComplexity: 'O(h) where h is height',
     spaceComplexity: 'O(1)',
@@ -581,40 +581,51 @@ const ALGORITHMS = {
     }
     
     public Node insert(Node root, int value) {
+        // Base case: empty tree or reached leaf position
         if (root == null) {
             return new Node(value);
         }
         
+        // Recursive case: navigate based on BST property
         if (value < root.value) {
             root.left = insert(root.left, value);
-        } else {
+        } else if (value > root.value) {
             root.right = insert(root.right, value);
         }
+        // Note: duplicate values are typically not inserted
         
         return root;
     }
 }`,
     steps: [
       {
-        title: 'Check Empty Tree',
-        description: 'If tree is empty, create new root node.'
+        title: 'Start at Root',
+        description: 'Begin insertion process at the root of the tree.'
+      },
+      {
+        title: 'Navigate Tree',
+        description: 'Follow BST property to find the correct insertion point.'
       },
       {
         title: 'Compare Values',
-        description: 'Compare new value with current node.'
+        description: 'Compare new value with current node to decide direction.'
       },
       {
-        title: 'Recursive Insert',
-        description: 'Recursively insert into left or right subtree.'
+        title: 'Find Insertion Point',
+        description: 'Locate the position where new node should be attached.'
+      },
+      {
+        title: 'Insert New Node',
+        description: 'Create and attach the new node as a leaf.'
       },
       {
         title: 'Complete Operation',
-        description: 'Return the updated tree structure.'
+        description: 'BST property maintained with new node added.'
       }
     ]
   },
   'tree-delete': {
-    title: 'Tree Deletion',
+    title: 'Binary Search Tree Deletion',
     description: 'Delete a node from a binary search tree while maintaining the BST property.',
     timeComplexity: 'O(h) where h is height',
     spaceComplexity: 'O(1)',
@@ -635,16 +646,25 @@ const ALGORITHMS = {
     public Node deleteNode(Node root, int value) {
         if (root == null) return null;
         
+        // Find the node to delete
         if (value < root.value) {
             root.left = deleteNode(root.left, value);
         } else if (value > root.value) {
             root.right = deleteNode(root.right, value);
         } else {
-            // Node with only one child or no child
+            // Found the node to delete
+            
+            // Case 1: Node with no children (leaf)
+            if (root.left == null && root.right == null) {
+                return null;
+            }
+            
+            // Case 2: Node with one child
             if (root.left == null) return root.right;
             if (root.right == null) return root.left;
             
-            // Node with two children
+            // Case 3: Node with two children
+            // Find inorder successor (smallest in right subtree)
             Node successor = findMin(root.right);
             root.value = successor.value;
             root.right = deleteNode(root.right, successor.value);
@@ -661,30 +681,34 @@ const ALGORITHMS = {
 }`,
     steps: [
       {
-        title: 'Find Node',
-        description: 'Locate the node to be deleted.'
+        title: 'Locate Target',
+        description: 'Search for the node to be deleted.'
       },
       {
-        title: 'Handle Leaf Node',
-        description: 'If node has no children, simply remove it.'
+        title: 'Analyze Node Type',
+        description: 'Determine if node has 0, 1, or 2 children.'
       },
       {
-        title: 'Handle Single Child',
-        description: 'If node has one child, replace with child.'
+        title: 'Find Successor',
+        description: 'For two-child case, find inorder successor.'
       },
       {
-        title: 'Handle Two Children',
-        description: 'If node has two children, find inorder successor.'
+        title: 'Replace Value',
+        description: 'Replace target node value with successor value.'
       },
       {
-        title: 'Complete Operation',
-        description: 'Return the updated tree structure.'
+        title: 'Remove Successor',
+        description: 'Delete the original successor node.'
+      },
+      {
+        title: 'Complete Deletion',
+        description: 'BST property maintained after deletion.'
       }
     ]
   },
   'tree-search': {
-    title: 'Tree Search',
-    description: 'Search for a value in a binary search tree.',
+    title: 'Binary Search Tree Search',
+    description: 'Search for a value in a binary search tree using the BST property.',
     timeComplexity: 'O(h) where h is height',
     spaceComplexity: 'O(1)',
     type: 'tree',
@@ -702,39 +726,58 @@ const ALGORITHMS = {
     }
     
     public Node search(Node root, int value) {
+        // Base cases: empty tree or value found
         if (root == null || root.value == value) {
             return root;
         }
         
+        // Value is smaller than root's value
         if (value < root.value) {
             return search(root.left, value);
         }
         
+        // Value is greater than root's value
         return search(root.right, value);
+    }
+    
+    // Iterative version (more memory efficient)
+    public Node searchIterative(Node root, int value) {
+        while (root != null && root.value != value) {
+            if (value < root.value) {
+                root = root.left;
+            } else {
+                root = root.right;
+            }
+        }
+        return root;
     }
 }`,
     steps: [
       {
-        title: 'Check Root',
-        description: 'Check if root is null or contains target value.'
+        title: 'Start at Root',
+        description: 'Begin search at the root of the tree.'
       },
       {
         title: 'Compare Values',
         description: 'Compare target with current node value.'
       },
       {
-        title: 'Recursive Search',
-        description: 'Search in appropriate subtree.'
+        title: 'Navigate Tree',
+        description: 'Move left or right based on comparison result.'
       },
       {
-        title: 'Complete Search',
-        description: 'Return found node or null.'
+        title: 'Continue Search',
+        description: 'Repeat until target is found or null is reached.'
+      },
+      {
+        title: 'Target Found',
+        description: 'Successfully located the target value.'
       }
     ]
   },
   'tree-traverse-inorder': {
-    title: 'Inorder Traversal',
-    description: 'Traverse a binary tree in inorder fashion (Left -> Root -> Right).',
+    title: 'Inorder Tree Traversal',
+    description: 'Traverse a binary tree in inorder fashion (Left → Root → Right).',
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(h)',
     type: 'tree',
@@ -753,30 +796,60 @@ const ALGORITHMS = {
     
     public void inorderTraversal(Node root) {
         if (root != null) {
+            // Step 1: Traverse left subtree
             inorderTraversal(root.left);
-            System.out.println(root.value);
+            
+            // Step 2: Process current node
+            System.out.print(root.value + " ");
+            
+            // Step 3: Traverse right subtree
             inorderTraversal(root.right);
+        }
+    }
+    
+    // Iterative version using stack
+    public void inorderIterative(Node root) {
+        Stack<Node> stack = new Stack<>();
+        Node current = root;
+        
+        while (current != null || !stack.isEmpty()) {
+            // Go to leftmost node
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
+            
+            // Process node
+            current = stack.pop();
+            System.out.print(current.value + " ");
+            
+            // Move to right subtree
+            current = current.right;
         }
     }
 }`,
     steps: [
       {
-        title: 'Visit Left Subtree',
-        description: 'Recursively traverse the left subtree.'
+        title: 'Start Traversal',
+        description: 'Begin inorder traversal at the root.'
       },
       {
-        title: 'Visit Root',
-        description: 'Process the current node.'
+        title: 'Visit Left Subtree',
+        description: 'Recursively traverse the left subtree first.'
+      },
+      {
+        title: 'Process Root',
+        description: 'Process the current node after left subtree.'
       },
       {
         title: 'Visit Right Subtree',
-        description: 'Recursively traverse the right subtree.'
+        description: 'Finally traverse the right subtree.'
       }
     ]
   },
   'tree-traverse-preorder': {
-    title: 'Preorder Traversal',
-    description: 'Traverse a binary tree in preorder fashion (Root -> Left -> Right).',
+    title: 'Preorder Tree Traversal',
+    description: 'Traverse a binary tree in preorder fashion (Root → Left → Right).',
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(h)',
     type: 'tree',
@@ -795,16 +868,46 @@ const ALGORITHMS = {
     
     public void preorderTraversal(Node root) {
         if (root != null) {
-            System.out.println(root.value);
+            // Step 1: Process current node
+            System.out.print(root.value + " ");
+            
+            // Step 2: Traverse left subtree
             preorderTraversal(root.left);
+            
+            // Step 3: Traverse right subtree
             preorderTraversal(root.right);
+        }
+    }
+    
+    // Iterative version using stack
+    public void preorderIterative(Node root) {
+        if (root == null) return;
+        
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        
+        while (!stack.isEmpty()) {
+            Node current = stack.pop();
+            System.out.print(current.value + " ");
+            
+            // Push right first, then left (stack is LIFO)
+            if (current.right != null) {
+                stack.push(current.right);
+            }
+            if (current.left != null) {
+                stack.push(current.left);
+            }
         }
     }
 }`,
     steps: [
       {
-        title: 'Visit Root',
-        description: 'Process the current node.'
+        title: 'Start Traversal',
+        description: 'Begin preorder traversal at the root.'
+      },
+      {
+        title: 'Process Root',
+        description: 'Process the current node first.'
       },
       {
         title: 'Visit Left Subtree',
@@ -812,13 +915,13 @@ const ALGORITHMS = {
       },
       {
         title: 'Visit Right Subtree',
-        description: 'Recursively traverse the right subtree.'
+        description: 'Finally traverse the right subtree.'
       }
     ]
   },
   'tree-traverse-postorder': {
-    title: 'Postorder Traversal',
-    description: 'Traverse a binary tree in postorder fashion (Left -> Right -> Root).',
+    title: 'Postorder Tree Traversal',
+    description: 'Traverse a binary tree in postorder fashion (Left → Right → Root).',
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(h)',
     type: 'tree',
@@ -837,24 +940,59 @@ const ALGORITHMS = {
     
     public void postorderTraversal(Node root) {
         if (root != null) {
+            // Step 1: Traverse left subtree
             postorderTraversal(root.left);
+            
+            // Step 2: Traverse right subtree
             postorderTraversal(root.right);
-            System.out.println(root.value);
+            
+            // Step 3: Process current node
+            System.out.print(root.value + " ");
+        }
+    }
+    
+    // Iterative version using two stacks
+    public void postorderIterative(Node root) {
+        if (root == null) return;
+        
+        Stack<Node> stack1 = new Stack<>();
+        Stack<Node> stack2 = new Stack<>();
+        
+        stack1.push(root);
+        
+        while (!stack1.isEmpty()) {
+            Node current = stack1.pop();
+            stack2.push(current);
+            
+            if (current.left != null) {
+                stack1.push(current.left);
+            }
+            if (current.right != null) {
+                stack1.push(current.right);
+            }
+        }
+        
+        while (!stack2.isEmpty()) {
+            System.out.print(stack2.pop().value + " ");
         }
     }
 }`,
     steps: [
       {
+        title: 'Start Traversal',
+        description: 'Begin postorder traversal at the root.'
+      },
+      {
         title: 'Visit Left Subtree',
-        description: 'Recursively traverse the left subtree.'
+        description: 'Recursively traverse the left subtree first.'
       },
       {
         title: 'Visit Right Subtree',
-        description: 'Recursively traverse the right subtree.'
+        description: 'Then traverse the right subtree.'
       },
       {
-        title: 'Visit Root',
-        description: 'Process the current node.'
+        title: 'Process Root',
+        description: 'Finally process the current node.'
       }
     ]
   },
