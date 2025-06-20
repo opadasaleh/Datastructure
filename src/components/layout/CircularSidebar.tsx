@@ -1,7 +1,7 @@
 import React, { useState, useCallback, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  AlignLeft, GitBranch, List, Layers, Share2, Code, X, Database, BarChart2
+  AlignLeft, GitBranch, List, Layers, Share2, Code, X, Database, BarChart2, Triangle
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -73,9 +73,20 @@ const CircularSidebar: React.FC<CircularSidebarProps> = ({ isVisible }) => {
       ]
     },
     {
+      title: 'Heaps',
+      icon: <Triangle size={20} />,
+      color: '#EC4899',
+      children: [
+        { title: 'Insert', path: '/algorithms/heap-insert' },
+        { title: 'Extract Max', path: '/algorithms/heap-extract' },
+        { title: 'Peek', path: '/algorithms/heap-peek' },
+        { title: 'Heapify', path: '/algorithms/heap-heapify' }
+      ]
+    },
+    {
       title: 'Trees',
       icon: <GitBranch size={20} />,
-      color: '#EC4899',
+      color: '#6366F1',
       children: [
         { title: 'Insert', path: '/algorithms/tree-insert' },
         { title: 'Delete', path: '/algorithms/tree-delete' },
@@ -88,7 +99,7 @@ const CircularSidebar: React.FC<CircularSidebarProps> = ({ isVisible }) => {
     {
       title: 'Composite',
       icon: <Database size={20} />,
-      color: '#6366F1',
+      color: '#14B8A6',
       children: [
         { title: 'Stack using Array', path: '/algorithms/stack-using-array' },
         { title: 'Queue using Array', path: '/algorithms/queue-using-array' },

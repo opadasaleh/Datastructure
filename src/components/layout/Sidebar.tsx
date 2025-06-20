@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   ChevronDown, ChevronRight, ChevronLeft,
   AlignLeft, GitBranch, Network, Database,
-  BarChart2, Binary, Share2, Grid2X2, List, Code, Menu, X, Layers
+  BarChart2, Binary, Share2, Grid2X2, List, Code, Menu, X, Layers, Triangle
 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -267,6 +267,32 @@ const SIDEBAR_ITEMS = [
         title: 'Clear',
         path: '/algorithms/queue-clear',
         description: 'Remove all elements from queue'
+      }
+    ]
+  },
+  {
+    title: 'Heap Operations',
+    icon: <Triangle size={20} />,
+    children: [
+      {
+        title: 'Insert',
+        path: '/algorithms/heap-insert',
+        description: 'Add element while maintaining heap property'
+      },
+      {
+        title: 'Extract Max',
+        path: '/algorithms/heap-extract',
+        description: 'Remove maximum element from heap'
+      },
+      {
+        title: 'Peek',
+        path: '/algorithms/heap-peek',
+        description: 'View maximum element without removing'
+      },
+      {
+        title: 'Heapify',
+        path: '/algorithms/heap-heapify',
+        description: 'Convert array into valid heap structure'
       }
     ]
   },

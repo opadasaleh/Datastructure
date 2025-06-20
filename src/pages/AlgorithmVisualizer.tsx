@@ -9,6 +9,7 @@ import ListVisualizer from '../components/visualizations/ListVisualizer';
 import QueueVisualizer from '../components/visualizations/QueueVisualizer';
 import CompositeStructureVisualizer from '../components/visualizations/CompositeStructureVisualizer';
 import StackVisualizer from '../components/visualizations/StackVisualizer';
+import HeapVisualizer from '../components/visualizations/HeapVisualizer';
 import SizeControl from '../components/controls/SizeControl';
 
 interface AlgorithmInfo {
@@ -1179,6 +1180,176 @@ private TreeNode findMin(TreeNode root) {
         description: 'Set size counter to zero.'
       }
     ]
+  },
+  'heap-insert': {
+    title: 'Heap Insertion',
+    description: 'Insert a new element into a heap while maintaining the heap property.',
+    timeComplexity: 'O(log n)',
+    spaceComplexity: 'O(1)',
+    code: `public void insert(int value) {
+    if (size >= capacity) {
+        throw new RuntimeException("Heap is full");
+    }
+    
+    // Add new element at the end
+    heap[size] = value;
+    size++;
+    
+    // Bubble up to maintain heap property
+    int current = size - 1;
+    while (current > 0) {
+        int parent = (current - 1) / 2;
+        if (heap[current] <= heap[parent]) {
+            break;
+        }
+        
+        // Swap with parent
+        swap(current, parent);
+        current = parent;
+    }
+}`,
+    steps: [
+      {
+        title: 'Add at End',
+        description: 'Place new element at the end of the heap.'
+      },
+      {
+        title: 'Bubble Up',
+        description: 'Compare with parent and swap if needed.'
+      },
+      {
+        title: 'Maintain Property',
+        description: 'Continue until heap property is satisfied.'
+      }
+    ]
+  },
+  'heap-extract': {
+    title: 'Heap Extract Maximum',
+    description: 'Remove and return the maximum element from a max heap.',
+    timeComplexity: 'O(log n)',
+    spaceComplexity: 'O(1)',
+    code: `public int extractMax() {
+    if (size == 0) {
+        throw new RuntimeException("Heap is empty");
+    }
+    
+    int max = heap[0];
+    
+    // Move last element to root
+    heap[0] = heap[size - 1];
+    size--;
+    
+    // Bubble down to maintain heap property
+    heapifyDown(0);
+    
+    return max;
+}
+
+private void heapifyDown(int index) {
+    while (true) {
+        int largest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+        
+        if (left < size && heap[left] > heap[largest]) {
+            largest = left;
+        }
+        if (right < size && heap[right] > heap[largest]) {
+            largest = right;
+        }
+        
+        if (largest == index) break;
+        
+        swap(index, largest);
+        index = largest;
+    }
+}`,
+    steps: [
+      {
+        title: 'Save Maximum',
+        description: 'Store the root element (maximum) to return.'
+      },
+      {
+        title: 'Replace Root',
+        description: 'Move last element to root position.'
+      },
+      {
+        title: 'Bubble Down',
+        description: 'Restore heap property by bubbling down.'
+      }
+    ]
+  },
+  'heap-peek': {
+    title: 'Heap Peek',
+    description: 'View the maximum element without removing it from the heap.',
+    timeComplexity: 'O(1)',
+    spaceComplexity: 'O(1)',
+    code: `public int peek() {
+    if (size == 0) {
+        throw new RuntimeException("Heap is empty");
+    }
+    
+    return heap[0];
+}`,
+    steps: [
+      {
+        title: 'Check if Empty',
+        description: 'Verify the heap has elements to view.'
+      },
+      {
+        title: 'Return Root Value',
+        description: 'Return the maximum value at the root.'
+      }
+    ]
+  },
+  'heap-heapify': {
+    title: 'Heapify Array',
+    description: 'Convert an arbitrary array into a valid heap structure.',
+    timeComplexity: 'O(n)',
+    spaceComplexity: 'O(1)',
+    code: `public void buildHeap(int[] array) {
+    this.heap = array;
+    this.size = array.length;
+    
+    // Start from last non-leaf node and heapify down
+    for (int i = (size / 2) - 1; i >= 0; i--) {
+        heapifyDown(i);
+    }
+}
+
+private void heapifyDown(int index) {
+    while (true) {
+        int largest = index;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
+        
+        if (left < size && heap[left] > heap[largest]) {
+            largest = left;
+        }
+        if (right < size && heap[right] > heap[largest]) {
+            largest = right;
+        }
+        
+        if (largest == index) break;
+        
+        swap(index, largest);
+        index = largest;
+    }
+}`,
+    steps: [
+      {
+        title: 'Start from Bottom',
+        description: 'Begin with last non-leaf node.'
+      },
+      {
+        title: 'Heapify Subtrees',
+        description: 'Ensure each subtree satisfies heap property.'
+      },
+      {
+        title: 'Work Upward',
+        description: 'Continue until entire tree is heapified.'
+      }
+    ]
   }
 };
 
@@ -1273,6 +1444,17 @@ private TreeNode findMin(TreeNode root) {
     if (id.startsWith('stack-')) {
       return (
         <StackVisualizer
+          operation={id}
+          currentStep={currentStep}
+          onStepsChange={setTotalSteps}
+          speed={speed}
+        />
+      );
+    }
+
+    if (id.startsWith('heap-')) {
+      return (
+        <HeapVisualizer
           operation={id}
           currentStep={currentStep}
           onStepsChange={setTotalSteps}
