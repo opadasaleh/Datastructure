@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useVisualization } from '../../contexts/VisualizationContext';
 
@@ -24,6 +25,12 @@ interface HeapVisualizerProps {
     speed: number;
 }
 
+interface HeapLevel {
+    level: number;
+    nodes: HeapNode[];
+    maxNodes: number;
+}
+
 const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
     operation,
     currentStep,
@@ -35,6 +42,10 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
     const [heap, setHeap] = useState<HeapNode[]>([]);
     const [operationSteps, setOperationSteps] = useState<any[]>([]);
     const [heapType, setHeapType] = useState<'max' | 'min'>('max');
+    const [heapLevels, setHeapLevels] = useState<HeapLevel[]>([]);
+    const [animatingNodes, setAnimatingNodes] = useState<Set<number>>(new Set());
+    const [heapHeight, setHeapHeight] = useState(0);
+    const [completenessPercentage, setCompletenessPercentage] = useState(100);
 
     useEffect(() => {
         // Initialize with a sample max heap
@@ -47,6 +58,7 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
         ];
         setHeap(initialHeap);
         generateOperationSteps(initialHeap);
+        calculateHeapMetrics(initialHeap);
     }, [operation]);
 
     useEffect(() => {
@@ -54,6 +66,76 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
             setHeap(operationSteps[currentStep].heap);
         }
     }, [currentStep, operationSteps]);
+
+    const calculateHeapMetrics = (heapArray: HeapNode[]) => {
+        if (heapArray.length === 0) {
+            setHeapLevels([]);
+            setHeapHeight(0);
+            setCompletenessPercentage(0);
+            return;
+        }
+
+        // Calculate heap height
+        const height = Math.floor(Math.log2(heapArray.length)) + 1;
+        setHeapHeight(height);
+
+        // Calculate completeness percentage
+        const maxNodesForHeight = Math.pow(2, height) - 1;
+        const completeness = (heapArray.length / maxNodesForHeight) * 100;
+        setCompletenessPercentage(Math.round(completeness));
+
+        // Organize nodes by levels
+        const levels: HeapLevel[] = [];
+        for (let level = 0; level < height; level++) {
+            const startIndex = Math.pow(2, level) - 1;
+            const endIndex = Math.min(Math.pow(2, level + 1) - 1, heapArray.length);
+            const levelNodes = heapArray.slice(startIndex, endIndex);
+            const maxNodesInLevel = Math.pow(2, level);
+            
+            levels.push({
+                level,
+                nodes: levelNodes,
+                maxNodes: maxNodesInLevel
+            });
+        }
+        setHeapLevels(levels);
+    };
+
+    const getNodePosition = (index: number, totalNodes: number) => {
+        const level = Math.floor(Math.log2(index + 1));
+        const positionInLevel = index - (Math.pow(2, level) - 1);
+        const nodesInLevel = Math.pow(2, level);
+        
+        // Dynamic positioning based on heap size
+        const baseWidth = Math.max(600, totalNodes * 80);
+        const levelWidth = baseWidth / (nodesInLevel + 1);
+        const x = levelWidth * (positionInLevel + 1);
+        const y = 80 + level * 100;
+        
+        return { x, y };
+    };
+
+    const isHeapPropertyViolated = (heap: HeapNode[], index: number) => {
+        const leftChild = 2 * index + 1;
+        const rightChild = 2 * index + 2;
+        
+        if (leftChild < heap.length && heap[index].value < heap[leftChild].value) return true;
+        if (rightChild < heap.length && heap[index].value < heap[rightChild].value) return true;
+        
+        return false;
+    };
+
+    // Update node positions dynamically
+    useEffect(() => {
+        const updatedHeap = heap.map((node, index) => {
+            const position = getNodePosition(index, heap.length);
+            return { ...node, x: position.x, y: position.y };
+        });
+        if (JSON.stringify(updatedHeap) !== JSON.stringify(heap)) {
+            setHeap(updatedHeap);
+        }
+        calculateHeapMetrics(heap);
+    }, [heap.length]);
 
     const generateOperationSteps = (initialHeap: HeapNode[]) => {
         const steps: any[] = [];
@@ -64,6 +146,7 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
             title: 'Initial Heap State',
             description: 'Starting with our max heap. The largest element is at the root.',
             explanation: 'A heap is a complete binary tree that satisfies the heap property. In a max heap, every parent node is greater than or equal to its children.',
+            heapMetrics: { height: Math.floor(Math.log2(initialHeap.length)) + 1, completeness: 100 },
             concept: 'Heap Property: Parent ≥ Children (Max Heap) or Parent ≤ Children (Min Heap)',
             heapDemo: 'Think of a corporate hierarchy - the CEO (root) has the highest authority, managers below, and so on!'
         });
@@ -76,6 +159,7 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
                 // Step 1: Add new element at the end
                 steps.push({
                     heap: JSON.parse(JSON.stringify(currentHeap)),
+                    animatingNodes: new Set(),
                     title: 'Step 1: Insert Strategy',
                     description: `Inserting value ${newValue} into the max heap.`,
                     explanation: 'In heap insertion, we first add the new element at the end of the heap (maintaining complete tree property), then bubble it up to restore heap property.',
@@ -87,8 +171,7 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
                 const newNode: HeapNode = {
                     value: newValue,
                     index: currentHeap.length,
-                    x: 350,
-                    y: 190,
+                    ...getNodePosition(currentHeap.length, currentHeap.length + 1),
                     isActive: false,
                     isHighlighted: false,
                     isNew: true,
@@ -102,6 +185,7 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
                 currentHeap.push(newNode);
                 steps.push({
                     heap: JSON.parse(JSON.stringify(currentHeap)),
+                    animatingNodes: new Set([currentHeap.length - 1]),
                     title: 'Step 2: Add at End',
                     description: `Added ${newValue} at the end of the heap (index ${newNode.index}).`,
                     explanation: 'The new element is placed at the next available position to maintain the complete binary tree property.',
@@ -120,6 +204,7 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
                     
                     steps.push({
                         heap: JSON.parse(JSON.stringify(currentHeap)),
+                        animatingNodes: new Set([childIndex, parentIndex]),
                         title: `Step ${steps.length}: Compare with Parent`,
                         description: `Comparing ${currentHeap[childIndex].value} with parent ${currentHeap[parentIndex].value}.`,
                         explanation: `Since ${currentHeap[childIndex].value} > ${currentHeap[parentIndex].value}, we need to swap them to maintain max heap property.`,
@@ -139,6 +224,7 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
 
                     steps.push({
                         heap: JSON.parse(JSON.stringify(currentHeap)),
+                        animatingNodes: new Set([childIndex, parentIndex]),
                         title: `Step ${steps.length}: Swap Elements`,
                         description: `Swapped ${temp} with ${currentHeap[childIndex].value}.`,
                         explanation: 'The swap restores the heap property for this parent-child relationship.',
@@ -164,6 +250,7 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
 
                 steps.push({
                     heap: JSON.parse(JSON.stringify(currentHeap)),
+                    animatingNodes: new Set(),
                     title: 'Insertion Complete',
                     description: `Successfully inserted ${newValue} into the max heap.`,
                     explanation: 'The heap property is restored. The new element has found its correct position in the heap.',
@@ -455,6 +542,86 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
         onStepsChange(steps.length);
     };
 
+    const renderHeapLevelView = () => {
+        return (
+            <div className="mb-8">
+                <h4 className="text-lg font-semibold mb-4 text-center">Heap Level Structure</h4>
+                <div className="space-y-4">
+                    {heapLevels.map((level, levelIndex) => (
+                        <div key={levelIndex} className="flex flex-col items-center">
+                            <div className="text-sm font-bold mb-2 text-gray-600 dark:text-gray-400">
+                                Level {level.level} ({level.nodes.length}/{level.maxNodes} nodes)
+                            </div>
+                            <div className="flex justify-center space-x-2">
+                                {Array.from({ length: level.maxNodes }, (_, i) => {
+                                    const node = level.nodes[i];
+                                    return (
+                                        <div
+                                            key={i}
+                                            className={`
+                                                w-12 h-12 rounded-full border-2 flex items-center justify-center text-sm font-bold
+                                                ${node ? 
+                                                    node.isNew ? 'border-blue-500 bg-blue-100 dark:bg-blue-900' :
+                                                    node.isHighlighted ? 'border-yellow-500 bg-yellow-100 dark:bg-yellow-900' :
+                                                    node.isComparing ? 'border-purple-500 bg-purple-100 dark:bg-purple-900' :
+                                                    node.isSwapping ? 'border-pink-500 bg-pink-100 dark:bg-pink-900' :
+                                                    node.isRoot ? 'border-red-500 bg-red-100 dark:bg-red-900' :
+                                                    'border-gray-400 bg-gray-100 dark:bg-gray-800'
+                                                    : 'border-dashed border-gray-300 dark:border-gray-600 bg-transparent'
+                                                }
+                                                transition-all duration-300
+                                            `}
+                                        >
+                                            {node ? node.value : ''}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    const renderHeapMetrics = () => {
+        return (
+            <div className={`
+                mb-6 p-4 rounded-lg
+                ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'}
+            `}>
+                <h4 className="text-lg font-semibold mb-3 text-center">Heap Metrics & Analysis</h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div className="text-center">
+                        <div className="text-2xl font-bold text-blue-500">{heap.length}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400">Total Nodes</div>
+                    </div>
+                    <div className="text-center">
+                        <div className="text-2xl font-bold text-green-500">{heapHeight}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400">Height</div>
+                    </div>
+                    <div className="text-center">
+                        <div className="text-2xl font-bold text-purple-500">{completenessPercentage}%</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400">Completeness</div>
+                    </div>
+                    <div className="text-center">
+                        <div className="text-2xl font-bold text-orange-500">{heap.length > 0 ? heap[0].value : 'N/A'}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400">Max Value</div>
+                    </div>
+                </div>
+                <div className="mt-4">
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Heap Completeness</div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div 
+                            className="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full transition-all duration-500"
+                            style={{ width: `${completenessPercentage}%` }}
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     const currentStepData = operationSteps[currentStep] || {};
 
     const renderConnections = () => {
@@ -464,6 +631,8 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
             const leftChild = 2 * i + 1;
             const rightChild = 2 * i + 2;
             
+            const isViolated = isHeapPropertyViolated(heap, i);
+            
             if (leftChild < heap.length) {
                 connections.push(
                     <line
@@ -472,8 +641,9 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
                         y1={heap[i].y! + 25}
                         x2={heap[leftChild].x}
                         y2={heap[leftChild].y! + 25}
-                        stroke={theme === 'dark' ? '#6B7280' : '#9CA3AF'}
-                        strokeWidth="2"
+                        stroke={isViolated ? '#EF4444' : (theme === 'dark' ? '#6B7280' : '#9CA3AF')}
+                        strokeWidth={isViolated ? "3" : "2"}
+                        strokeDasharray={isViolated ? "5,5" : "none"}
                     />
                 );
             }
@@ -486,14 +656,107 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
                         y1={heap[i].y! + 25}
                         x2={heap[rightChild].x}
                         y2={heap[rightChild].y! + 25}
-                        stroke={theme === 'dark' ? '#6B7280' : '#9CA3AF'}
-                        strokeWidth="2"
+                        stroke={isViolated ? '#EF4444' : (theme === 'dark' ? '#6B7280' : '#9CA3AF')}
+                        strokeWidth={isViolated ? "3" : "2"}
+                        strokeDasharray={isViolated ? "5,5" : "none"}
                     />
                 );
             }
         }
         
         return connections;
+    };
+
+    const renderNodes = () => {
+        const nodes = [];
+
+        for (const node of heap) {
+
+        if (node.x && node.y) {
+            nodes.push(
+                <g key={`node-${node.value}-${node.index}`}>
+                    {/* Glow effect for special nodes */}
+                    {(node.isNew || node.isSwapping || node.isComparing) && (
+                        <circle
+                            cx={node.x}
+                            cy={node.y + 25}
+                            r="30"
+                            fill="none"
+                            stroke={
+                                node.isNew ? '#3B82F6' :
+                                node.isSwapping ? '#EC4899' :
+                                node.isComparing ? '#8B5CF6' : '#F59E0B'
+                            }
+                            strokeWidth="2"
+                            opacity="0.3"
+                            className="animate-pulse"
+                        />
+                    )}
+                    
+                    {/* Node circle */}
+                    <circle
+                        cx={node.x}
+                        cy={node.y + 25}
+                        r="25"
+                        fill={
+                            node.isNew ? '#3B82F6' :
+                            node.isDeleting ? '#EF4444' :
+                            node.isHighlighted ? '#F59E0B' :
+                            node.isComparing ? '#8B5CF6' :
+                            node.isSwapping ? '#EC4899' :
+                            node.isActive ? '#10B981' :
+                            node.isRoot ? '#DC2626' :
+                            theme === 'dark' ? '#374151' : '#F3F4F6'
+                        }
+                        stroke={theme === 'dark' ? '#6B7280' : '#9CA3AF'}
+                        strokeWidth="2"
+                        className={`transition-all duration-500 ${
+                            (node.isNew || node.isSwapping || node.isComparing) ? 'animate-pulse' : ''
+                        }`}
+                    />
+                    
+                    {/* Node value */}
+                    <text
+                        x={node.x}
+                        y={node.y + 30}
+                        textAnchor="middle"
+                        className={`text-sm font-bold ${
+                            node.isNew || node.isDeleting || node.isHighlighted || 
+                            node.isComparing || node.isSwapping || node.isActive || node.isRoot ? 
+                            'fill-white' :
+                            theme === 'dark' ? 'fill-white' : 'fill-gray-900'
+                        }`}
+                    >
+                        {node.value}
+                    </text>
+                    
+                    {/* Index label */}
+                    <text
+                        x={node.x}
+                        y={node.y + 45}
+                        textAnchor="middle"
+                        className="text-xs fill-gray-500"
+                    >
+                        [{node.index}]
+                    </text>
+                    
+                    {/* Parent-child relationship indicators */}
+                    {node.index > 0 && (
+                        <text
+                            x={node.x}
+                            y={node.y + 5}
+                            textAnchor="middle"
+                            className="text-xs fill-gray-400"
+                        >
+                            P:{Math.floor((node.index - 1) / 2)}
+                        </text>
+                    )}
+                </g>
+            );
+        }
+        }
+
+        return nodes;
     };
 
     return (
@@ -534,6 +797,12 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
                 )}
             </div>
 
+            {/* Heap Metrics */}
+            {renderHeapMetrics()}
+
+            {/* Heap Level View */}
+            {renderHeapLevelView()}
+
             {/* Heap Info Panel */}
             <div className={`
                 mb-6 p-3 rounded-lg text-center
@@ -558,63 +827,41 @@ const HeapVisualizer: React.FC<HeapVisualizerProps> = ({
             {/* Heap visualization */}
             <div className="flex-1 w-full overflow-auto mb-8">
                 <div 
-                    className="min-w-[600px] min-h-[300px] relative"
+                    className="min-w-[800px] min-h-[400px] relative"
                     style={{ transform: `scale(${size})`, transformOrigin: 'center' }}
                 >
-                    <svg width="600" height="300" className="w-full h-full">
+                    <svg width="800" height="400" className="w-full h-full">
                         {/* Render connections first */}
                         {renderConnections()}
                         
                         {/* Render nodes */}
-                        {heap.map((node, index) => (
-                            <g key={index}>
-                                {/* Node circle */}
-                                <circle
-                                    cx={node.x}
-                                    cy={node.y! + 25}
-                                    r="25"
-                                    fill={
-                                        node.isNew ? '#3B82F6' :
-                                        node.isDeleting ? '#EF4444' :
-                                        node.isHighlighted ? '#F59E0B' :
-                                        node.isComparing ? '#8B5CF6' :
-                                        node.isSwapping ? '#EC4899' :
-                                        node.isActive ? '#10B981' :
-                                        node.isRoot ? '#DC2626' :
-                                        theme === 'dark' ? '#374151' : '#F3F4F6'
-                                    }
-                                    stroke={theme === 'dark' ? '#6B7280' : '#9CA3AF'}
-                                    strokeWidth="2"
-                                    className="transition-all duration-500"
-                                />
-                                
-                                {/* Node value */}
-                                <text
-                                    x={node.x}
-                                    y={node.y! + 30}
-                                    textAnchor="middle"
-                                    className={`text-sm font-bold ${
-                                        node.isNew || node.isDeleting || node.isHighlighted || 
-                                        node.isComparing || node.isSwapping || node.isActive || node.isRoot ? 
-                                        'fill-white' :
-                                        theme === 'dark' ? 'fill-white' : 'fill-gray-900'
-                                    }`}
-                                >
-                                    {node.value}
-                                </text>
-                                
-                                {/* Index label */}
-                                <text
-                                    x={node.x}
-                                    y={node.y! + 45}
-                                    textAnchor="middle"
-                                    className="text-xs fill-gray-500"
-                                >
-                                    [{node.index}]
-                                </text>
-                            </g>
-                        ))}
+                        {renderNodes()}
                     </svg>
+                </div>
+            </div>
+
+            {/* Heap Array Representation */}
+            <div className={`
+                mb-6 p-4 rounded-lg
+                ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'}
+            `}>
+                <h4 className="text-lg font-semibold mb-3 text-center">Array Representation</h4>
+                <div className="flex justify-center space-x-1 flex-wrap">
+                    {heap.map((node, index) => (
+                        <div key={index} className="flex flex-col items-center mb-2">
+                            <div className="text-xs text-gray-500 mb-1">[{index}]</div>
+                            <div className={`
+                                w-12 h-12 border-2 rounded flex items-center justify-center text-sm font-bold
+                                ${node.isRoot ? 'border-red-500 bg-red-100 dark:bg-red-900' :
+                                  'border-gray-400 bg-gray-100 dark:bg-gray-800'}
+                            `}>
+                                {node.value}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="text-center text-xs text-gray-500 mt-2">
+                    Parent of index i: [(i-1)/2] | Children of index i: [2i+1], [2i+2]
                 </div>
             </div>
 
